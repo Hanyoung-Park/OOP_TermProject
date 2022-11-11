@@ -21,7 +21,7 @@ public:
     ATM(string primaryBankName, string serial, bool isSingleBank, bool isUnilingual, int amountOfCashes);
     void endSession(); // REQ2.2에 써먹기
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
-    void selectLanguage(bool isUnilingual);
+    int selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
     void deposit(); //4번
     void withdrawal(); //5번
@@ -44,7 +44,7 @@ public:
 };
 
 class Account {
-private:
+protected:
     string bankName;
     string userName;
     string accountNumber;
