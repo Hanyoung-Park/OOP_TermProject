@@ -17,6 +17,16 @@ private:
     // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
 
 public:
+    ATM();
+    void endSession(); // REQ2.2에 써먹기
+    bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
+
+    void deposit(); //4번
+    void withdrawal(); //5번
+    void transfer(); //6번
+    void displayHistory(); //7번
+    void multiLanguageSupport(); //8번
+
 
 };
 
