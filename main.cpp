@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -43,25 +44,79 @@ public:
 
 };
 
-class Account {
+//-----------------------------------------------------------------------------
+
+class Account
+{
 protected:
     string bankName;
     string userName;
     string accountNumber;
     int availableFund;
+
 public:
     Account(string bankName, string userName, string accountNumber, int availableFund);
-
+    int getFund();
+    string getBank();
+    string getAcc();
+    Account &operator+=(int amount);
+    Account &operator-=(int amount);
 };
 
-class User {
+Account::Account(string bankName, string userName, string accountNumber, int availableFund)
+{
+    cout << "Account constructor" << endl;
+    this->bankName = bankName;
+    this->userName = userName;
+    this->accountNumber = accountNumber;
+    this->availableFund = availableFund;
+}
+
+int Account::getFund()
+{
+    return availableFund;
+}
+
+string Account::getBank()
+{
+    return bankName;
+}
+
+string Account::getAcc()
+{
+    return accountNumber;
+}
+
+Account &Account::operator+=(int amount)
+{
+    availableFund += amount;
+    return *this;
+}
+
+Account &Account::operator-=(int amount)
+{
+    availableFund -= amount;
+    return *this;
+}
+
+//-----------------------------------------------------------------------------
+
+class User
+{
 private:
     // REQ1.6, REQ1.7, 어떤 구조로 Bank별 Account를 담을지 고민
 
 public:
-    User();
-
+    User(map<string, Account> user_map, string accountNumber, Account acc);
 };
+
+User::User(map<string, Account> user_map, string accountNumber, Account acc) // Give map created by each bank as user_map
+{
+    user_map.insert(pair<string, Account>(accountNumber, acc));
+}
+
+//-----------------------------------------------------------------------------
+
 
 int main() {
     Account account1 = Account("Kakao", "David", "111-111-111111", 100000);
