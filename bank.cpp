@@ -35,4 +35,3 @@ Account* Bank::openAccount() {
     return newAccount; 
 }
 
-int Bank::deposit = 0;
