@@ -24,6 +24,7 @@ public:
     int getFund();
     string getBank();
     string getNum();
+    string getPassword();
     Account &operator+=(int amount);
     Account &operator-=(int amount);
 };
@@ -36,7 +37,6 @@ Account::Account(string bankName, string userName, string accountNumber, int ava
     this->accountNumber = accountNumber;
     this->availableFund = availableFund;
     this->password = password;
-
 }
 
 int Account::getFund()
@@ -52,6 +52,11 @@ string Account::getBank()
 string Account::getNum()
 {
     return accountNumber;
+}
+
+string Account::getPassword()
+{
+    return password;
 }
 
 Account &Account::operator+=(int amount)
