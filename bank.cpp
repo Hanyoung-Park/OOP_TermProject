@@ -14,6 +14,7 @@ protected:
 public:
     Bank();
     ~Bank();
+    int validPassword(Account userAccount, int num);
     Account* openAccount();
 };
 
@@ -30,8 +31,15 @@ Account* Bank::openAccount() {
     cout << "input Account Number(12-digit): " << endl;
     cin >> Accountnum;
     Account* newAccount;
-    //newAccount.bankName -> bankName; 
-
     return newAccount; 
+}
+
+int Bank::validPassword(Account userAccount, int num) {
+    if(num == userAccount.getPassword) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
