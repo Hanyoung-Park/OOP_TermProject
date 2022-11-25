@@ -76,17 +76,20 @@ class Card
 protected:
     Bank *bank;
     string accNum;
+    Account *cardAcc;
 
 public:
     Card();
     Card(Bank *b, Account *acc);
     virtual string get_card_num() = 0;
     virtual Bank *get_bank();
+    virtual Account *get_account();
 };
 
 Card::Card(Bank *b, Account *acc)
 {
     this->bank = b;
+    this->cardAcc = acc;
     this->accNum = acc->getNum();
 }
 
@@ -98,6 +101,10 @@ string Card::get_card_num()
 Bank *Card::get_bank()
 {
     return bank;
+}
+
+Account *Card::get_account(){
+    return cardAcc;
 }
 
 class AdminCard : Card
