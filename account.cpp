@@ -113,12 +113,14 @@ public:
     AdminCard(Bank *b, Account *acc);
     virtual string get_card_num();
     virtual Bank *get_bank();
+    virtual Account *get_account();
 };
 
 AdminCard::AdminCard(Bank *b, Account *acc)
 {
     this->bank = b;
     this->accNum = acc->getNum();
+    this->cardAcc = acc;
 }
 
 //-----------------------------------------------------------------------------
