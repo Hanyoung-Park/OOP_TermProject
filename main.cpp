@@ -22,12 +22,13 @@ protected:
     bool isAdmin;
 
     //---Account Information
+    
     Account* usingAccount;
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
-    void readCardInfo(Account* account);
+    void readCardInfo(Card* card);
     void startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
@@ -51,6 +52,11 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
+void ATM::readCardInfo(Card* card) {
+    isAdmin = false;
+    usingAccount = card->get_account();
+}
+
 void ATM::showInfo(string val) {
     if(isAdmin == false) {
         cout << "Wrong Approach" << endl;
@@ -64,19 +70,13 @@ void ATM::showInfo(string val) {
     }
 }
 
-void ATM::readCardInfo(Account* account) {
-    isAdmin = false;  //추후 수정  
-    
-}
-
 void ATM::startSession() {
     selectLanguage(isUnilingual);
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
     } else {
         cout << "반갑습니다.\n시작하려면 카드를 기기에 넣어주십시오." << endl;
-    }    
-
+    }
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
@@ -102,29 +102,26 @@ void ATM::selectLanguage(bool isUnilingual) {
 }
 
 void ATM::deposit() {
+    int depositMoney;
+    bool isCheck;
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
-        bool isCheck;
         cin >> isCheck;
         cout << "Please enter the amount of fund to deposit." << endl;
-        int depositMoney;
         cin >> depositMoney;
         usingAccount += depositMoney;
         cout << "Your deposit has been succesful." << endl;
     } else {
         cout << "현금과 수표 중 사용하실 방법을 선택해주세요." << endl;
         cout << "현금: 0, 수표: 1" << endl;
-        bool isCheck;
         cin >> isCheck;
         cout << "입금할 금핵을 입력해주세요." << endl;
-        int depositMoney;
         cin >> depositMoney;
         usingAccount += depositMoney;
         cout << "입금이 성공적으로 완료되었습니다." << endl;
     }
-    
-
+    amountOfCashes += depositMoney;
 }
 
 void ATM::withdrawal() {
@@ -151,9 +148,41 @@ void ATM::withdrawal() {
         usingAccount -= withdrawalMoney;
         cout << "출금이 성공적으로 완료되었습니다." << endl;
     }
-    
-    
+    amountOfCashes -= withdrawalMoney;   
 }
+
+void ATM::transfer() {
+    string accNum;
+    int transferMoney;
+    if(isEnglish==true) {
+        cout << "Please enter the number of the account you want to transfer money to." << endl;
+        cin >> accNum;
+        cout << "Please enter the amount of money to transfer." << endl;
+        cin >> transferMoney;
+        if(transferMoney>usingAccount->getFund()) {
+            cout << "Sorry, there are not enough funds in the account." << endl;
+            endSession();
+            return;
+        }
+        usingAccount -= transferMoney;
+    } else {
+        cout << "송금하려는 계좌의 계좌번호를 입력해주세요." << endl;
+        cin >> accNum;
+        cout << "이체할 금액을 입력해주세요." << endl;
+        cin >> transferMoney;
+        if(transferMoney>usingAccount->getFund()) {
+            cout << "죄송합니다. 계좌에 충분한 금액이 들어있지 않습니다." << endl;
+            endSession();
+            return;
+        }
+        usingAccount -= transferMoney;
+    }
+}
+
+void ATM::endSession() {
+    usingAccount = NULL;
+}
+
 
 int Bank::deposit = 0;
 class Bank {
@@ -269,17 +298,20 @@ class Card
 protected:
     Bank *bank;
     string accNum;
+    Account *cardAcc;
 
 public:
     Card();
     Card(Bank *b, Account *acc);
-    string get_card_num();
-    Bank *get_bank();
+    virtual string get_card_num() = 0;
+    virtual Bank *get_bank();
+    virtual Account *get_account();
 };
 
 Card::Card(Bank *b, Account *acc)
 {
     this->bank = b;
+    this->cardAcc = acc;
     this->accNum = acc->getNum();
 }
 
@@ -293,16 +325,22 @@ Bank *Card::get_bank()
     return bank;
 }
 
+Account *Card::get_account(){
+    return cardAcc;
+}
+
 class AdminCard : Card
 {
 public:
     AdminCard(Bank *b, Account *acc);
     virtual string get_card_num();
     virtual Bank *get_bank();
+    virtual Account *get_account();
 };
 
 AdminCard::AdminCard(Bank *b, Account *acc)
 {
     this->bank = b;
     this->accNum = acc->getNum();
+    this->cardAcc = acc;
 }
