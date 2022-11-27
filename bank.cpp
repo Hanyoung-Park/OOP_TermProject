@@ -5,47 +5,49 @@
 
 using namespace std;
 
-
 class ATM;
 class Account;
+
 
 
 
 class Bank {
 protected:
     string bankName;
-    map<string, vector<Account*>> user_info;
+    map<string, Account*> account_info;
 
 public:
     Bank();
     ~Bank();
     int validPassword(Account userAccount, int num);
-    Account* returnAccount(string userName);
+    Account* returnAccount(string accountNumber);
     Account* openAccount();
+    
 
 };
 
+Bank::Bank(string bankName) {
+    this->bankName = bankName;
+    account_info = map<string Account*>();
+}
 
-Bank::Bank() {}
 Bank::~Bank() {}
-Account* Bank::returnAccount(string userName) {
+
+Account* Bank::returnAccount(string accountNumber) {
     int inputpassword;
     cout << "Password?" << endl;
     cin >> inputpassword;
-    for (vector<Account*>::iterator itr = user_info[userName].begin(); itr != user_info[userName].end; ++itr) {
-        if(itr->password == inputpassword) {
-        return itr;
-        }
+    if (account_info[accountNumber]->getPassword == inputpassword) {
+        return account_info[accountNumber];
     }
     return nullptr;
-    
 }
 
 Account* Bank::openAccount() {
     string bankName;
     string userName;
     int accountNum;
-    int password;
+    string password;
     int fund;
     cout << "input Bank Name: " << endl;
     cin >> bankName;
@@ -57,25 +59,21 @@ Account* Bank::openAccount() {
     cin >> password;
     cout << "input available fund: " << endl;
     cin >> fund;
+
     Account* newAccount;
-    newAccount = new Account(bankName, userName, accountNum, password, fund); //Account class에 password 추가
-    if (user_info.count(userName)) {
-        user_info[userName].push_back(newAccount);
-        }
-    else {
-        vector<Account*> v_account = {newAccount};
-        user_info.insert(pair<string, vector<Account*>(userName, v_account));
-        }
-    return newAccount; 
+    newAccount = new Account(bankName, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    return newAccount;
+
 }
 
-
-int Bank::validPassword(Account userAccount, int num) {
-    if(num == userAccount.getPassword) {
+/*
+int Bank::validPassword(Account userAccount, string password) {
+    if(password == userAccount.getPassword) {
         return 1;
     }
     else {
         return 0;
     }
 }
-
+*/
