@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -7,6 +8,7 @@ class ATM;
 class Bank;
 class Account;
 class User;
+class Card;
 
 class ATM {
 protected:
@@ -14,14 +16,23 @@ protected:
     bool isSingleBank; // REQ1.2, if the atm is single atm -> true
     bool isUnilingual; // REQ1.3
     int amountOfCashes; // REQ1.4 참조
-    // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
+    string history; // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
     string primaryBankName;
     bool isEnglish;
+    bool isAdmin;
+    bool isPrimaryBank;
+
+    //---Account Information
+    
+    Account* usingAccount;
+    
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
+    void showHistory();
+    void readCardInfo(Card* card);
     void startSession();
-    void endSession(); // REQ2.2에 써먹기
+    void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
     void selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
@@ -40,14 +51,45 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     serial = serialnum;
     isSingleBank = SingleBank;
     isUnilingual = Unilingual;
+    amountOfCashes = cashes;
+}
+
+void ATM::readCardInfo(Card* card) {
+    isPrimaryBank = (primaryBankName==card->get_bank()->bankName);
+    if(isSingleBank==true && isPrimaryBank==false) {
+        cout << "The Card is invalid" << endl;
+        endSession();
+        return;
+    }
+    usingAccount = card->get_account();
 }
 
 void ATM::showInfo(string val) {
+    if(isAdmin == false) {
+        cout << "Wrong Approach" << endl;
+        endSession();
+        return;
+    }
     if(val=="serial") {
         cout << "Serial number is: " << serial << endl;
     } else if(val=="cash") {
         cout << "Amount of cashes is: " << amountOfCashes << endl;
     }
+}
+
+void ATM::showHistory() {
+    if(isAdmin==false) {
+        cout << "Wrong Approach" << endl;
+        endSession();
+        return;
+    }
+    if(history=="") {
+        cout << "No record" << endl;
+        endSession();
+        return;
+    }
+    cout << history << endl;
+    endSession();
 }
 
 void ATM::startSession() {
@@ -57,7 +99,6 @@ void ATM::startSession() {
     } else {
         cout << "반갑습니다.\n시작하려면 카드를 기기에 넣어주십시오." << endl;
     }
-
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
@@ -83,81 +124,97 @@ void ATM::selectLanguage(bool isUnilingual) {
 }
 
 void ATM::deposit() {
+    int depositMoney;
+    bool isCheck;
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
-        bool isCheck;
         cin >> isCheck;
+        cout << "Please enter the amount of fund to deposit." << endl;
+        cin >> depositMoney;
+        usingAccount += depositMoney;
+        cout << "Your deposit has been succesful." << endl;
     } else {
         cout << "현금과 수표 중 사용하실 방법을 선택해주세요." << endl;
         cout << "현금: 0, 수표: 1" << endl;
-        bool isCheck;
         cin >> isCheck;
+        cout << "입금할 금핵을 입력해주세요." << endl;
+        cin >> depositMoney;
+        usingAccount += depositMoney;
+        cout << "입금이 성공적으로 완료되었습니다." << endl;
+    }
+    if(isCheck==true) {
+        return;
+    }
+    amountOfCashes += depositMoney;
+    if(isPrimaryBank==false) {
+        usingAccount -= 1000;
     }
 }
 
 void ATM::withdrawal() {
     int withdrawalMoney;
+    int includingFee;
+    if(isPrimaryBank) {
+        includingFee = 1000;
+    } else {
+        includingFee = 2000;
+    }
     if(isEnglish==true) {
         cout << "Please enter the amount of fund to withdraw." << endl;
         cin >> withdrawalMoney;
-        if(amountOfCashes<withdrawalMoney) {
+        includingFee += withdrawalMoney;
+        if(amountOfCashes<includingFee) {
             cout << "Sorry, This ATM does not have enough money in it. " << endl;
             endSession();
             return;
         }
+        usingAccount -= includingFee;
+        cout << "Your withdrawal has been successful." << endl;
 
     } else {
         cout << "출금할 금액을 입력해주세요." << endl;
         cin >> withdrawalMoney;
-        if(amountOfCashes<withdrawalMoney) {
+        includingFee += withdrawalMoney;
+        if(amountOfCashes<includingFee) {
             cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
             endSession();
             return;
         } 
+        usingAccount -= includingFee;
+        cout << "출금이 성공적으로 완료되었습니다." << endl;
     }
-    
-
+    amountOfCashes -= withdrawalMoney;   
 }
 
-class Bank {
-private:
+void ATM::transfer() {
+    string accNum;
+    int transferMoney;
+    if(isEnglish==true) {
+        cout << "Please enter the number of the account you want to transfer money to." << endl;
+        cin >> accNum;
+        cout << "Please enter the amount of money to transfer." << endl;
+        cin >> transferMoney;
+        if(transferMoney>usingAccount->getFund()) {
+            cout << "Sorry, there are not enough funds in the account." << endl;
+            endSession();
+            return;
+        }
+        usingAccount -= transferMoney;
+    } else {
+        cout << "송금하려는 계좌의 계좌번호를 입력해주세요." << endl;
+        cin >> accNum;
+        cout << "이체할 금액을 입력해주세요." << endl;
+        cin >> transferMoney;
+        if(transferMoney>usingAccount->getFund()) {
+            cout << "죄송합니다. 계좌에 충분한 금액이 들어있지 않습니다." << endl;
+            endSession();
+            return;
+        }
+        usingAccount -= transferMoney;
+    }
+}
 
-public:
-    Bank();
-    int transactionFee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000}; // REQ1.8
-    void openAccount(); // REQ1.5
-
-};
-
-class Account {
-protected:
-    string bankName;
-    string userName;
-    string accountNumber;
-    int availableFund;
-public:
-    Account(string bankName, string userName, string accountNumber, int availableFund);
-    ~Account();
-
-};
-
-class User {
-private:
-    // REQ1.6, REQ1.7, 어떤 구조로 Bank별 Account를 담을지 고민
-
-public:
-    User();
-
-};
-
-int main() {
-    Account account1 = Account("Kakao", "David", "111-111-111111", 100000);
-    Account account2 = Account("Shinhan", "Jane", "222-222-222222", 0);
-    Account account3 = Account("Kakao", "Kate", "333-333-333333", 3000);
-    ATM atm1 = ATM("Kakao", "111111", true, true, 50000);
-    ATM atm2 = ATM("Shinhan", "222222", false, false, 0);
-    ATM atm3 = ATM("Shinhan", "333333", false, false, 2000);
-
-    return 0;
+void ATM::endSession() {
+    usingAccount = NULL;
 }
