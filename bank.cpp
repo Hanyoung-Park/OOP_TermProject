@@ -22,6 +22,7 @@ public:
     int validPassword(Account userAccount, int num);
     Account* returnAccount(string accountNumber);
     Account* openAccount();
+    string getBankName();
     
 
 };
@@ -32,6 +33,10 @@ Bank::Bank(string bankName) {
 }
 
 Bank::~Bank() {}
+
+string Bank::getBankName() {
+    return bankName;   
+}
 
 Account* Bank::returnAccount(string accountNumber) {
     int inputpassword;
