@@ -189,8 +189,12 @@ void ATM::withdrawal() {
 
 void ATM::transfer() {
     string accNum;
+    string transferBank;
     int transferMoney;
+    int transferCase;
     if(isEnglish==true) {
+        cout << "Please enter the bank of the account you want to transfer money to." << endl;
+        cin >> transferBank;
         cout << "Please enter the number of the account you want to transfer money to." << endl;
         cin >> accNum;
         cout << "Please enter the amount of money to transfer." << endl;
@@ -202,6 +206,8 @@ void ATM::transfer() {
         }
         usingAccount -= transferMoney;
     } else {
+        cout << "송금하려는 계좌의 은행을 입력해주세요." << endl;
+        cin >> transferBank;
         cout << "송금하려는 계좌의 계좌번호를 입력해주세요." << endl;
         cin >> accNum;
         cout << "이체할 금액을 입력해주세요." << endl;
