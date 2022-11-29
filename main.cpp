@@ -327,7 +327,11 @@ void ATM::startSession() {
         endSession();
     }
     for (int i=0; i < 3; i++){
-        
+        Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
+        if (acc == nullptr)
+            ;
+        else
+            break;
     }
 }
 
