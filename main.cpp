@@ -360,6 +360,7 @@ void ATM::deposit() {
     bool isCheck;
     string message;
     int moneyArr[4];
+    int amountOfCheck;
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
@@ -381,6 +382,13 @@ void ATM::deposit() {
             depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
             
         } else {
+            cout << "Please enter the amount of checks to deposit." << endl;
+            cin >> amountOfCheck;
+            if(amountOfCheck>30) {
+                cout << "Too many checks" << endl;
+                endSession();
+                return;
+            }
             cout << "Please enter the amount of fund to deposit." << endl;
             cin >> depositMoney;
         }
@@ -407,6 +415,13 @@ void ATM::deposit() {
             depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
             
         } else {
+            cout << "입금할 수표의 장수를 입력해주세요." << endl;
+            cin >> amountOfCheck;
+            if(amountOfCheck>30) {
+                cout << "수표가 너무 많습니다." << endl;
+                endSession();
+                return;
+            }
             cout << "입금할 금액을 입력해주세요." << endl;
             cin >> depositMoney;
         }
