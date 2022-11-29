@@ -39,7 +39,7 @@ string Bank::getBankName() {
 }
 
 Account* Bank::returnAccount(string accountNumber) {
-    int inputpassword;
+    string inputpassword;
     cout << "Password?" << endl;
     cin >> inputpassword;
     if (account_info[accountNumber]->getPassword() == inputpassword) {
