@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
+
 
 using namespace std;
 
@@ -229,7 +231,9 @@ Account* Bank::openAccount() {
     account_info.insert(pair<string, Account*>(accountNum, newAccount));
     return newAccount;
 
-}//------------------------------------------------------------------------------------------------
+}
+
+//------------------------------------------------------------------------------------------------
 
 class ATM {
 protected:
@@ -245,12 +249,13 @@ protected:
     int TransactionID;
     //---Account Information
     Account* usingAccount;
+    string filePath = serial+"history.txt";
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
     void readCardInfo(Card* card);
-    int startSession();
+    void startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
     void selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
@@ -276,6 +281,8 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 void ATM::readCardInfo(Card* card) {
     isPrimaryBank = (primaryBankName==card->get_bank()->getBankName());
     usingAccount = card->get_account();
+    if (usingAccount == NULL)
+        isAdmin = true;
 }
 
 void ATM::showInfo(string val) {
@@ -306,7 +313,7 @@ void ATM::showHistory() {
     endSession();
 }
 
-int ATM::startSession() {
+void ATM::startSession() {
     selectLanguage(isUnilingual);
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
@@ -321,14 +328,6 @@ int ATM::startSession() {
         }
         endSession();
     }
-    for (int i=0; i < 3; i++){
-        Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
-        if (acc == nullptr)
-            ;
-        else
-            return 0;
-    }
-    endSession();
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
@@ -356,6 +355,7 @@ void ATM::selectLanguage(bool isUnilingual) {
 void ATM::deposit() {
     int depositMoney;
     bool isCheck;
+    string message;
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
@@ -407,12 +407,21 @@ void ATM::deposit() {
         usingAccount -= 1000;
     }
     TransactionID += 1;
-    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
+    history += message;
+    ofstream writeFile(filePath.data());
+    if (writeFile.is_open() ){
+        writeFile << message;
+        writeFile.close();
+    }
+
+
 }
 
 void ATM::withdrawal() {
     int withdrawalMoney;
     int includingFee;
+    string message;
     if(isPrimaryBank) {
         includingFee = 1000;
     } else {
@@ -444,8 +453,13 @@ void ATM::withdrawal() {
     }
     amountOfCashes -= withdrawalMoney;   
     TransactionID += 1;
-    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
-
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+    history += message;
+    ofstream writeFile(filePath.data());
+    if (writeFile.is_open() ){
+        writeFile << message;
+        writeFile.close();
+    }
 }
 
 void ATM::transfer() {
@@ -454,6 +468,8 @@ void ATM::transfer() {
     Bank* transferBank;
     Account* transferAccount;
     map<string, Account*> account_info;
+    string message;
+
     int transferMoney;
     int transferFee;
     if(isEnglish==true) {
@@ -565,14 +581,17 @@ void ATM::transfer() {
     usingAccount -= (transferMoney+transferFee);
     transferAccount += transferMoney;
     TransactionID += 1;
-    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    history += message;
 
+    ofstream writeFile(filePath.data());
+    if (writeFile.is_open() ){
+        writeFile << message;
+        writeFile.close();
+    }
 }
 
 void ATM::endSession() {
     usingAccount = NULL;
 }
-
-
-
 
