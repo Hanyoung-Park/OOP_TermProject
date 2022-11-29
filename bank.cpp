@@ -51,7 +51,7 @@ Account* Bank::returnAccount(string accountNumber) {
 Account* Bank::openAccount() {
     string bankName;
     string userName;
-    int accountNum;
+    string accountNum;
     string password;
     int fund;
     cout << "input Bank Name: " << endl;
