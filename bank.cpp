@@ -1,15 +1,21 @@
 #include <iostream>
+#include <fstream>
 #include <string>
-#include <vector>
 #include <map>
+
 
 using namespace std;
 
 class ATM;
+class Bank;
 class Account;
+class User;
+class Card;
 
 
 
+
+//-----------------------------------------------------------------------------
 
 class Bank {
 protected:
@@ -23,6 +29,7 @@ public:
     Account* returnAccount(string accountNumber);
     Account* openAccount();
     string getBankName();
+    map<string, Account*> getAccountMap();
     
 
 };
@@ -48,6 +55,10 @@ Account* Bank::returnAccount(string accountNumber) {
     return nullptr;
 }
 
+map<string, Account*> Bank::getAccountMap() {
+    return account_info;
+}
+
 Account* Bank::openAccount() {
     string bankName;
     string userName;
@@ -66,19 +77,35 @@ Account* Bank::openAccount() {
     cin >> fund;
 
     Account* newAccount;
-    newAccount = new Account(bankName, userName, accountNum, fund, password); //Account class에 password 추가
+    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
     account_info.insert(pair<string, Account*>(accountNum, newAccount));
     return newAccount;
 
 }
 
-/*
-int Bank::validPassword(Account userAccount, string password) {
-    if(password == userAccount.getPassword) {
-        return 1;
-    }
-    else {
-        return 0;
-    }
+Account* Bank::openAccount() {
+    string bankName;
+    string userName;
+    string accountNum;
+    string password;
+    int fund;
+    cout << "input Bank Name: " << endl;
+    cin >> bankName;
+    cout << "input User Name: " << endl;
+    cin >> userName;
+    cout << "input Account Number(12-digit): " << endl;
+    cin >> accountNum;
+    cout << "input Password: " << endl;
+    cin >> password;
+    cout << "input available fund: " << endl;
+    cin >> fund;
+
+    Account* newAccount;
+    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    return newAccount;
+
 }
-*/
+
+//------------------------------------------------------------------------------------------------
+
