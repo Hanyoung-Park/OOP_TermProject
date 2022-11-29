@@ -17,7 +17,7 @@ protected:
     map<string, Account*> account_info;
 
 public:
-    Bank();
+    Bank(string bankName);
     ~Bank();
     int validPassword(Account userAccount, int num);
     Account* returnAccount(string accountNumber);
@@ -29,7 +29,7 @@ public:
 
 Bank::Bank(string bankName) {
     this->bankName = bankName;
-    account_info = map<string Account*>();
+    account_info = map<string, Account*>();
 }
 
 Bank::~Bank() {}
