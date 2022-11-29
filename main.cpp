@@ -356,21 +356,27 @@ void ATM::deposit() {
     int depositMoney;
     bool isCheck;
     string message;
+    int moneyArr[4];
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
         cin >> isCheck;
         if(isCheck==false) {
-            while (1) {
-                cout << "Please enter the amount of fund to deposit." << endl;
-                cin >> depositMoney;
-                if(depositMoney%1000!=0) {
-                    cout << "You can only use banknotes. Please enter the amount of fund again." << endl;
-                    depositMoney = 0;
-                } else {
-                    break;
-                }
+            cout << "Please enter the number of 50,000 won notes to be deposited." << endl;
+            cin >> moneyArr[0];
+            cout << "Please enter the number of 10,000 won notes to be deposited." << endl;
+            cin >> moneyArr[1];
+            cout << "Please enter the number of 5,000 won notes to be deposited." << endl;
+            cin >> moneyArr[2];
+            cout << "Please enter the number of 1,000 won notes to be deposited." << endl;
+            cin >> moneyArr[3];
+            if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
+                cout << "Too many banknotes" << endl;
+                endSession();
+                return;
             }
+            depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
+            
         } else {
             cout << "Please enter the amount of fund to deposit." << endl;
             cin >> depositMoney;
@@ -382,16 +388,21 @@ void ATM::deposit() {
         cout << "현금: 0, 수표: 1" << endl;
         cin >> isCheck;
         if(isCheck==false) {
-            while (1) {
-                cout << "입금할 금액을 입력해주세요." << endl;
-                cin >> depositMoney;
-                if(depositMoney%1000!=0) {
-                    cout << "지폐만 사용할 수 있습니다. 입금할 금액을 다시 입력해주세요." << endl;
-                    depositMoney = 0;
-                } else {
-                    break;
-                }
+            cout << "입금할 5만원권 장수를 입력해주세요." << endl;
+            cin >> moneyArr[0];
+            cout << "입금할 만원권 장수를 입력해주세요" << endl;
+            cin >> moneyArr[1];
+            cout << "입금할 5천원권 장수를 입력해주세요" << endl;
+            cin >> moneyArr[2];
+            cout << "입금할 천원권 장수를 입력해주세요" << endl;
+            cin >> moneyArr[3];
+            if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
+                cout << "지폐가 너무 많습니다." << endl;
+                endSession();
+                return;
             }
+            depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
+            
         } else {
             cout << "입금할 금액을 입력해주세요." << endl;
             cin >> depositMoney;
