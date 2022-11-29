@@ -10,29 +10,31 @@ class Account;
 class User;
 class Card;
 
+//-----------------------------------------------------------------------------
+
 class Account
 {
 protected:
-    string bankName;
     string userName;
     string accountNumber;
     string password;
+    Bank* bank;
     int availableFund;
 
 public:
-    Account(string bankName, string userName, string accountNumber, int availableFund, string password);
+    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password);
     int getFund();
-    string getBank();
+    Bank* getBank();
     string getNum();
     string getPassword();
     Account &operator+=(int amount);
     Account &operator-=(int amount);
 };
 
-Account::Account(string bankName, string userName, string accountNumber, int availableFund, string password)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password)
 {
     cout << "Account constructor" << endl;
-    this->bankName = bankName;
+    this->bank = bank;
     this->userName = userName;
     this->accountNumber = accountNumber;
     this->availableFund = availableFund;
@@ -44,9 +46,9 @@ int Account::getFund()
     return availableFund;
 }
 
-string Account::getBank()
+Bank *Account::getBank()
 {
-    return bankName;
+    return bank;
 }
 
 string Account::getNum()
@@ -71,37 +73,21 @@ Account &Account::operator-=(int amount)
     return *this;
 }
 
-
-
-class User {
-private:
-    // REQ1.6, REQ1.7, 어떤 구조로 Bank별 Account를 담을지 고민
-
-public:
-    User();
-
-};
-
 class Card
 {
 protected:
     Bank *bank;
     string accNum;
     Account *cardAcc;
-
 public:
-    Card();
-    Card(Bank *b, Account *acc);
-    virtual string get_card_num() = 0;
+    Card ();
+    string get_card_num();
     virtual Bank *get_bank();
     virtual Account *get_account();
 };
 
-Card::Card(Bank *b, Account *acc)
+Card::Card()
 {
-    this->bank = b;
-    this->cardAcc = acc;
-    this->accNum = acc->getNum();
 }
 
 string Card::get_card_num()
@@ -118,21 +104,132 @@ Account *Card::get_account(){
     return cardAcc;
 }
 
+class NormCard: Card
+{
+public:
+    NormCard(Bank *b, Account *acc);
+};
+
+NormCard::NormCard(Bank *b, Account *acc)
+{
+    this->bank = b;
+    this->cardAcc = acc;
+    this->accNum = acc->getNum();
+}
+
 class AdminCard : Card
 {
 public:
-    AdminCard(Bank *b, Account *acc);
-    virtual string get_card_num();
-    virtual Bank *get_bank();
-    virtual Account *get_account();
+    AdminCard(string accNum);
+    Bank *get_bank() override;
+    Account *get_account() override;
 };
 
-AdminCard::AdminCard(Bank *b, Account *acc)
+AdminCard::AdminCard(string accNum)
 {
-    this->bank = b;
-    this->accNum = acc->getNum();
-    this->cardAcc = acc;
+    this->accNum = accNum;
 }
+
+Bank *AdminCard::get_bank()
+{
+    return NULL;
+}
+
+Account *AdminCard::get_account(){
+    return NULL;
+}
+
+//-----------------------------------------------------------------------------
+
+class Bank {
+protected:
+    string bankName;
+    map<string, Account*> account_info;
+
+public:
+    Bank(string bankName);
+    ~Bank();
+    int validPassword(Account userAccount, int num);
+    Account* returnAccount(string accountNumber);
+    Account* openAccount();
+    string getBankName();
+    map<string, Account*> getAccountMap();
+    
+
+};
+
+Bank::Bank(string bankName) {
+    this->bankName = bankName;
+    account_info = map<string, Account*>();
+}
+
+Bank::~Bank() {}
+
+string Bank::getBankName() {
+    return bankName;   
+}
+
+Account* Bank::returnAccount(string accountNumber) {
+    string inputpassword;
+    cout << "Password?" << endl;
+    cin >> inputpassword;
+    if (account_info[accountNumber]->getPassword() == inputpassword) {
+        return account_info[accountNumber];
+    }
+    return nullptr;
+}
+
+map<string, Account*> Bank::getAccountMap() {
+    return account_info;
+}
+
+Account* Bank::openAccount() {
+    string bankName;
+    string userName;
+    string accountNum;
+    string password;
+    int fund;
+    cout << "input Bank Name: " << endl;
+    cin >> bankName;
+    cout << "input User Name: " << endl;
+    cin >> userName;
+    cout << "input Account Number(12-digit): " << endl;
+    cin >> accountNum;
+    cout << "input Password: " << endl;
+    cin >> password;
+    cout << "input available fund: " << endl;
+    cin >> fund;
+
+    Account* newAccount;
+    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    return newAccount;
+
+}
+
+Account* Bank::openAccount() {
+    string bankName;
+    string userName;
+    string accountNum;
+    string password;
+    int fund;
+    cout << "input Bank Name: " << endl;
+    cin >> bankName;
+    cout << "input User Name: " << endl;
+    cin >> userName;
+    cout << "input Account Number(12-digit): " << endl;
+    cin >> accountNum;
+    cout << "input Password: " << endl;
+    cin >> password;
+    cout << "input available fund: " << endl;
+    cin >> fund;
+
+    Account* newAccount;
+    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    return newAccount;
+
+}//------------------------------------------------------------------------------------------------
 
 class ATM {
 protected:
@@ -161,7 +258,7 @@ public:
     void deposit(); //4번
     void withdrawal(); //5번
     void transfer(); //6번
-    void displayHistory(); //7번
+    void showHistory(); //7번
     void multiLanguageSupport(); //8번
     int calculateFee();
 
@@ -177,7 +274,7 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 }
 
 void ATM::readCardInfo(Card* card) {
-    isPrimaryBank = (primaryBankName==card->get_bank()->bankName);
+    isPrimaryBank = (primaryBankName==card->get_bank()->getBankName());
     if(isSingleBank==true && isPrimaryBank==false) {
         cout << "The Card is invalid" << endl;
         endSession();
@@ -474,97 +571,5 @@ void ATM::endSession() {
 }
 
 
-
-
-
-class Bank {
-protected:
-    string bankName;
-    map<string, Account*> account_info;
-
-public:
-    Bank(string bankName);
-    ~Bank();
-    int validPassword(Account userAccount, int num);
-    Account* returnAccount(string accountNumber);
-    Account* openAccount();
-    string getBankName();
-    map<string, Account*> getAccountMap();
-    
-
-};
-
-Bank::Bank(string bankName) {
-    this->bankName = bankName;
-    account_info = map<string, Account*>();
-}
-
-Bank::~Bank() {}
-
-string Bank::getBankName() {
-    return bankName;   
-}
-
-Account* Bank::returnAccount(string accountNumber) {
-    string inputpassword;
-    cout << "Password?" << endl;
-    cin >> inputpassword;
-    if (account_info[accountNumber]->getPassword() == inputpassword) {
-        return account_info[accountNumber];
-    }
-    return nullptr;
-}
-
-map<string, Account*> Bank::getAccountMap() {
-    return account_info;
-}
-
-Account* Bank::openAccount() {
-    string bankName;
-    string userName;
-    string accountNum;
-    string password;
-    int fund;
-    cout << "input Bank Name: " << endl;
-    cin >> bankName;
-    cout << "input User Name: " << endl;
-    cin >> userName;
-    cout << "input Account Number(12-digit): " << endl;
-    cin >> accountNum;
-    cout << "input Password: " << endl;
-    cin >> password;
-    cout << "input available fund: " << endl;
-    cin >> fund;
-
-    Account* newAccount;
-    newAccount = new Account(bankName, userName, accountNum, fund, password); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(accountNum, newAccount));
-    return newAccount;
-
-}
-
-Account* Bank::openAccount() {
-    string bankName;
-    string userName;
-    string accountNum;
-    string password;
-    int fund;
-    cout << "input Bank Name: " << endl;
-    cin >> bankName;
-    cout << "input User Name: " << endl;
-    cin >> userName;
-    cout << "input Account Number(12-digit): " << endl;
-    cin >> accountNum;
-    cout << "input Password: " << endl;
-    cin >> password;
-    cout << "input available fund: " << endl;
-    cin >> fund;
-
-    Account* newAccount;
-    newAccount = new Account(bankName, userName, accountNum, fund, password); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(accountNum, newAccount));
-    return newAccount;
-
-}
 
 
