@@ -135,16 +135,29 @@ AdminCard::AdminCard(Bank *b, Account *acc)
 }
 
 
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+class ATM;
+class Bank;
+class Account;
+class User;
+class Card;
+
 class ATM {
 protected:
     string serial; // REQ1.1, 6-digit serial number
     bool isSingleBank; // REQ1.2, if the atm is single atm -> true
     bool isUnilingual; // REQ1.3
     int amountOfCashes; // REQ1.4 참조
-    // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
+    string history; // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
     string primaryBankName;
     bool isEnglish;
     bool isAdmin;
+    bool isPrimaryBank;
 
     //---Account Information
     
@@ -153,6 +166,7 @@ protected:
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
+    void showHistory();
     void readCardInfo(Card* card);
     void startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
@@ -178,7 +192,12 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 }
 
 void ATM::readCardInfo(Card* card) {
-    isAdmin = false;
+    isPrimaryBank = (primaryBankName==card->get_bank()->bankName);
+    if(isSingleBank==true && isPrimaryBank==false) {
+        cout << "The Card is invalid" << endl;
+        endSession();
+        return;
+    }
     usingAccount = card->get_account();
 }
 
@@ -193,6 +212,21 @@ void ATM::showInfo(string val) {
     } else if(val=="cash") {
         cout << "Amount of cashes is: " << amountOfCashes << endl;
     }
+}
+
+void ATM::showHistory() {
+    if(isAdmin==false) {
+        cout << "Wrong Approach" << endl;
+        endSession();
+        return;
+    }
+    if(history=="") {
+        cout << "No record" << endl;
+        endSession();
+        return;
+    }
+    cout << history << endl;
+    endSession();
 }
 
 void ATM::startSession() {
@@ -246,31 +280,45 @@ void ATM::deposit() {
         usingAccount += depositMoney;
         cout << "입금이 성공적으로 완료되었습니다." << endl;
     }
+    if(isCheck==true) {
+        return;
+    }
     amountOfCashes += depositMoney;
+    if(isPrimaryBank==false) {
+        usingAccount -= 1000;
+    }
 }
 
 void ATM::withdrawal() {
     int withdrawalMoney;
+    int includingFee;
+    if(isPrimaryBank) {
+        includingFee = 1000;
+    } else {
+        includingFee = 2000;
+    }
     if(isEnglish==true) {
         cout << "Please enter the amount of fund to withdraw." << endl;
         cin >> withdrawalMoney;
-        if(amountOfCashes<withdrawalMoney) {
+        includingFee += withdrawalMoney;
+        if(amountOfCashes<includingFee) {
             cout << "Sorry, This ATM does not have enough money in it. " << endl;
             endSession();
             return;
         }
-        usingAccount -= withdrawalMoney;
+        usingAccount -= includingFee;
         cout << "Your withdrawal has been successful." << endl;
 
     } else {
         cout << "출금할 금액을 입력해주세요." << endl;
         cin >> withdrawalMoney;
-        if(amountOfCashes<withdrawalMoney) {
+        includingFee += withdrawalMoney;
+        if(amountOfCashes<includingFee) {
             cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
             endSession();
             return;
         } 
-        usingAccount -= withdrawalMoney;
+        usingAccount -= includingFee;
         cout << "출금이 성공적으로 완료되었습니다." << endl;
     }
     amountOfCashes -= withdrawalMoney;   
@@ -278,8 +326,12 @@ void ATM::withdrawal() {
 
 void ATM::transfer() {
     string accNum;
+    string transferBank;
     int transferMoney;
+    int transferCase;
     if(isEnglish==true) {
+        cout << "Please enter the bank of the account you want to transfer money to." << endl;
+        cin >> transferBank;
         cout << "Please enter the number of the account you want to transfer money to." << endl;
         cin >> accNum;
         cout << "Please enter the amount of money to transfer." << endl;
@@ -291,6 +343,8 @@ void ATM::transfer() {
         }
         usingAccount -= transferMoney;
     } else {
+        cout << "송금하려는 계좌의 은행을 입력해주세요." << endl;
+        cin >> transferBank;
         cout << "송금하려는 계좌의 계좌번호를 입력해주세요." << endl;
         cin >> accNum;
         cout << "이체할 금액을 입력해주세요." << endl;
@@ -308,10 +362,6 @@ void ATM::endSession() {
     usingAccount = NULL;
 }
 
-using namespace std;
-
-class ATM;
-class Account;
 
 
 
