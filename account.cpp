@@ -77,33 +77,35 @@ protected:
     Bank *bank;
     string accNum;
     Account *cardAcc;
-
-public:
-    Card();
-    Card(Bank *b, Account *acc);
-    virtual string get_card_num() = 0;
-    virtual Bank *get_bank();
-    virtual Account *get_account();
 };
 
-Card::Card(Bank *b, Account *acc)
+class NormCard: Card
+{
+public:
+    NormCard(Bank *b, Account *acc);
+    string get_card_num();
+    Bank *get_bank();
+    Account *get_account();
+};
+
+NormCard::NormCard(Bank *b, Account *acc)
 {
     this->bank = b;
     this->cardAcc = acc;
     this->accNum = acc->getNum();
 }
 
-string Card::get_card_num()
+string NormCard::get_card_num()
 {
     return accNum;
 }
 
-Bank *Card::get_bank()
+Bank *NormCard::get_bank()
 {
     return bank;
 }
 
-Account *Card::get_account(){
+Account *NormCard::get_account(){
     return cardAcc;
 }
 
@@ -111,9 +113,9 @@ class AdminCard : Card
 {
 public:
     AdminCard(Bank *b, Account *acc);
-    virtual string get_card_num();
-    virtual Bank *get_bank();
-    virtual Account *get_account();
+    string get_card_num();
+    Bank *get_bank();
+    Account *get_account();
 };
 
 AdminCard::AdminCard(Bank *b, Account *acc)
@@ -121,6 +123,20 @@ AdminCard::AdminCard(Bank *b, Account *acc)
     this->bank = b;
     this->accNum = acc->getNum();
     this->cardAcc = acc;
+}
+
+string AdminCard::get_card_num()
+{
+    return accNum;
+}
+
+Bank *AdminCard::get_bank()
+{
+    return bank;
+}
+
+Account *AdminCard::get_account(){
+    return cardAcc;
 }
 
 //-----------------------------------------------------------------------------
