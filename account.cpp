@@ -13,26 +13,26 @@ class User;
 class Account
 {
 protected:
-    string bankName;
     string userName;
     string accountNumber;
     string password;
+    Bank* bank;
     int availableFund;
 
 public:
-    Account(string bankName, string userName, string accountNumber, int availableFund, string password);
+    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password);
     int getFund();
-    string getBank();
+    Bank* getBank();
     string getNum();
     string getPassword();
     Account &operator+=(int amount);
     Account &operator-=(int amount);
 };
 
-Account::Account(string bankName, string userName, string accountNumber, int availableFund, string password)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password)
 {
     cout << "Account constructor" << endl;
-    this->bankName = bankName;
+    this->bank = bank;
     this->userName = userName;
     this->accountNumber = accountNumber;
     this->availableFund = availableFund;
@@ -44,9 +44,9 @@ int Account::getFund()
     return availableFund;
 }
 
-string Account::getBank()
+Bank *Account::getBank()
 {
-    return bankName;
+    return bank;
 }
 
 string Account::getNum()
