@@ -134,19 +134,6 @@ AdminCard::AdminCard(Bank *b, Account *acc)
     this->cardAcc = acc;
 }
 
-
-#include <iostream>
-#include <string>
-#include <map>
-
-using namespace std;
-
-class ATM;
-class Bank;
-class Account;
-class User;
-class Card;
-
 class ATM {
 protected:
     string serial; // REQ1.1, 6-digit serial number
@@ -158,9 +145,8 @@ protected:
     bool isEnglish;
     bool isAdmin;
     bool isPrimaryBank;
-
+    int TransactionID;
     //---Account Information
-    
     Account* usingAccount;
     
 public:
@@ -320,6 +306,8 @@ void ATM::deposit() {
     if(isPrimaryBank==false) {
         usingAccount -= 1000;
     }
+    TransactionID += 1;
+    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
 }
 
 void ATM::withdrawal() {
@@ -355,6 +343,9 @@ void ATM::withdrawal() {
         cout << "출금이 성공적으로 완료되었습니다." << endl;
     }
     amountOfCashes -= withdrawalMoney;   
+    TransactionID += 1;
+    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+
 }
 
 void ATM::transfer() {
@@ -473,6 +464,9 @@ void ATM::transfer() {
     }
     usingAccount -= (transferMoney+transferFee);
     transferAccount += transferMoney;
+    TransactionID += 1;
+    history += to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+
 }
 
 void ATM::endSession() {
