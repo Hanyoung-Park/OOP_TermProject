@@ -219,10 +219,10 @@ string Bank::getBankName() {
 }
 
 Account* Bank::returnAccount(string accountNumber) {
-    int inputpassword;
+    string inputpassword;
     cout << "Password?" << endl;
     cin >> inputpassword;
-    if (account_info[accountNumber]->getPassword == inputpassword) {
+    if (account_info[accountNumber]->getPassword() == inputpassword) {
         return account_info[accountNumber];
     }
     return nullptr;
@@ -231,7 +231,7 @@ Account* Bank::returnAccount(string accountNumber) {
 Account* Bank::openAccount() {
     string bankName;
     string userName;
-    int accountNum;
+    string accountNum;
     string password;
     int fund;
     cout << "input Bank Name: " << endl;
@@ -251,6 +251,7 @@ Account* Bank::openAccount() {
     return newAccount;
 
 }
+
 
 class Account
 {
