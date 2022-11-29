@@ -6,6 +6,9 @@
 
 using namespace std;
 
+
+
+
 class ATM;
 class Bank;
 class Account;
@@ -467,7 +470,7 @@ void ATM::withdrawal() {
     message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
     history += message;
     ofstream writeFile(filePath.data());
-    if (writeFile.is_open() ){
+    if (writeFile.is_open()){
         writeFile << message;
         writeFile.close();
     }
@@ -606,3 +609,4 @@ void ATM::endSession() {
     usingAccount = NULL;
 }
 
+map<string, Bank> bankmap;
