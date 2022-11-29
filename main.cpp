@@ -235,6 +235,14 @@ void ATM::startSession() {
     } else {
         cout << "반갑습니다.\n시작하려면 카드를 기기에 넣어주십시오." << endl;
     }
+    if(isSingleBank==true && isPrimaryBank==false) {
+        if(isEnglish==true) {
+            cout << "The Card is invalid" << endl;
+        } else {
+            cout << "사용할 수 없는 카드입니다." << endl;
+        }
+        endSession();
+    }
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
