@@ -489,6 +489,7 @@ public:
     Account* returnAccount(string accountNumber);
     Account* openAccount();
     string getBankName();
+    map<string, Account*> getAccountMap();
     
 
 };
@@ -512,6 +513,34 @@ Account* Bank::returnAccount(string accountNumber) {
         return account_info[accountNumber];
     }
     return nullptr;
+}
+
+map<string, Account*> Bank::getAccountMap() {
+    return account_info;
+}
+
+Account* Bank::openAccount() {
+    string bankName;
+    string userName;
+    string accountNum;
+    string password;
+    int fund;
+    cout << "input Bank Name: " << endl;
+    cin >> bankName;
+    cout << "input User Name: " << endl;
+    cin >> userName;
+    cout << "input Account Number(12-digit): " << endl;
+    cin >> accountNum;
+    cout << "input Password: " << endl;
+    cin >> password;
+    cout << "input available fund: " << endl;
+    cin >> fund;
+
+    Account* newAccount;
+    newAccount = new Account(bankName, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    return newAccount;
+
 }
 
 Account* Bank::openAccount() {
