@@ -266,23 +266,49 @@ void ATM::deposit() {
         cout << "Please choose between cash or check." << endl;
         cout << "Cash: 0, Check: 1" << endl;
         cin >> isCheck;
-        cout << "Please enter the amount of fund to deposit." << endl;
-        cin >> depositMoney;
+        if(isCheck==false) {
+            while (1) {
+                cout << "Please enter the amount of fund to deposit." << endl;
+                cin >> depositMoney;
+                if(depositMoney%1000!=0) {
+                    cout << "You can only use banknotes. Please enter the amount of fund again." << endl;
+                    depositMoney = 0;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            cout << "Please enter the amount of fund to deposit." << endl;
+            cin >> depositMoney;
+        }
         usingAccount += depositMoney;
         cout << "Your deposit has been succesful." << endl;
     } else {
         cout << "현금과 수표 중 사용하실 방법을 선택해주세요." << endl;
         cout << "현금: 0, 수표: 1" << endl;
         cin >> isCheck;
-        cout << "입금할 금핵을 입력해주세요." << endl;
-        cin >> depositMoney;
+        if(isCheck==false) {
+            while (1) {
+                cout << "입금할 금액을 입력해주세요." << endl;
+                cin >> depositMoney;
+                if(depositMoney%1000!=0) {
+                    cout << "지폐만 사용할 수 있습니다. 입금할 금액을 다시 입력해주세요." << endl;
+                    depositMoney = 0;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            cout << "입금할 금액을 입력해주세요." << endl;
+            cin >> depositMoney;
+        }
+        
         usingAccount += depositMoney;
         cout << "입금이 성공적으로 완료되었습니다." << endl;
     }
-    if(isCheck==true) {
-        return;
+    if(isCheck==false) {
+        amountOfCashes += depositMoney;
     }
-    amountOfCashes += depositMoney;
     if(isPrimaryBank==false) {
         usingAccount -= 1000;
     }
