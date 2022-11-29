@@ -326,6 +326,9 @@ void ATM::startSession() {
         }
         endSession();
     }
+    for (int i=0; i < 3; i++){
+        
+    }
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
