@@ -359,36 +359,120 @@ void ATM::withdrawal() {
 
 void ATM::transfer() {
     string accNum;
-    string transferBank;
+    string transferBankName;
+    Bank* transferBank;
+    Account* transferAccount;
+    map<string, Account*> account_info;
     int transferMoney;
-    int transferCase;
+    int transferFee;
     if(isEnglish==true) {
-        cout << "Please enter the bank of the account you want to transfer money to." << endl;
-        cin >> transferBank;
-        cout << "Please enter the number of the account you want to transfer money to." << endl;
-        cin >> accNum;
+        while(1) {
+            int cnt = 0;
+            string transferBankName;
+            cout << "Please enter the bank of the account you want to transfer money to." << endl;
+            cin >> transferBankName;
+            if(bankmap[transferBankName]!=NULL) {
+                transferBank = &bankmap[transferBankName];
+                account_info = transferBank->getAccountMap();
+            } else {
+                cout << "Please enter an appropriate name of bank." << endl;
+                cnt += 1;
+            }
+            if(cnt==3) {
+                cout << "Session ended: Please get your card" << endl;
+                endSession();
+                return;
+            }
+        }
+        while(1) {
+            int cnt = 0;
+            cout << "Please enter the number of the account you want to transfer money to." << endl;
+            cin >> accNum;
+            if(account_info[accNum]!=NULL) {
+                transferAccount = account_info[accNum];
+                break;
+            } else {
+                cout << "Please enter an appropriate number of account." << endl;
+                cnt += 1;
+            }
+            if (cnt==3) {
+                cout << "Session ended: Please get your card" << endl;
+                endSession();
+                return;
+            }
+        }
+
+        // Transfer Case 판별
+        if(isPrimaryBank && transferBankName==primaryBankName) {
+            transferFee = 2000;
+        } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
+            transferFee = 3000;
+        } else {
+            transferFee = 4000;
+        }
         cout << "Please enter the amount of money to transfer." << endl;
         cin >> transferMoney;
-        if(transferMoney>usingAccount->getFund()) {
+        if(transferMoney+transferFee>usingAccount->getFund()) {
             cout << "Sorry, there are not enough funds in the account." << endl;
             endSession();
             return;
         }
-        usingAccount -= transferMoney;
+        
     } else {
-        cout << "송금하려는 계좌의 은행을 입력해주세요." << endl;
-        cin >> transferBank;
-        cout << "송금하려는 계좌의 계좌번호를 입력해주세요." << endl;
-        cin >> accNum;
-        cout << "이체할 금액을 입력해주세요." << endl;
+        while(1) {
+            int cnt = 0;
+            string transferBankName;
+            cout << "송금할 계좌의 은행명을 입력해주세요." << endl;
+            cin >> transferBankName;
+            if(bankmap[transferBankName]!=NULL) {
+                transferBank = &bankmap[transferBankName];
+                account_info = transferBank->getAccountMap();
+            } else {
+                cout << "정확한 은행의 이름을 입력해주세요." << endl;
+                cnt += 1;
+            }
+            if(cnt==3) {
+                cout << "세션이 종료되었습니다.: 카드를 가져가주세요." << endl;
+                endSession();
+                return;
+            }
+        }
+        while(1) {
+            int cnt = 0;
+            cout << "송금할 계좌번호를 입력해주세요." << endl;
+            cin >> accNum;
+            if(account_info[accNum]!=NULL) {
+                transferAccount = account_info[accNum];
+                break;
+            } else {
+                cout << "정확한 계좌번호를 입력해주세요." << endl;
+                cnt += 1;
+            }
+            if (cnt==3) {
+                cout << "세션이 종료되었습니다.: 카드를 가져가주세요." << endl;
+                endSession();
+                return;
+            }
+        }
+
+        // Transfer Case 판별
+        if(isPrimaryBank && transferBankName==primaryBankName) {
+            transferFee = 2000;
+        } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
+            transferFee = 3000;
+        } else {
+            transferFee = 4000;
+        }
+        cout << "송금할 금액을 입력해주세요." << endl;
         cin >> transferMoney;
-        if(transferMoney>usingAccount->getFund()) {
-            cout << "죄송합니다. 계좌에 충분한 금액이 들어있지 않습니다." << endl;
+        if(transferMoney+transferFee>usingAccount->getFund()) {
+            cout << "죄송합니다만 계좌에 충분한 금액이 들어있지 않습니다." << endl;
             endSession();
             return;
         }
-        usingAccount -= transferMoney;
     }
+    usingAccount -= (transferMoney+transferFee);
+    transferAccount += transferMoney;
 }
 
 void ATM::endSession() {
