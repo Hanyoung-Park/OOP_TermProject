@@ -10,6 +10,131 @@ class Account;
 class User;
 class Card;
 
+class Account
+{
+protected:
+    string bankName;
+    string userName;
+    string accountNumber;
+    string password;
+    int availableFund;
+
+public:
+    Account(string bankName, string userName, string accountNumber, int availableFund, string password);
+    int getFund();
+    string getBank();
+    string getNum();
+    string getPassword();
+    Account &operator+=(int amount);
+    Account &operator-=(int amount);
+};
+
+Account::Account(string bankName, string userName, string accountNumber, int availableFund, string password)
+{
+    cout << "Account constructor" << endl;
+    this->bankName = bankName;
+    this->userName = userName;
+    this->accountNumber = accountNumber;
+    this->availableFund = availableFund;
+    this->password = password;
+}
+
+int Account::getFund()
+{
+    return availableFund;
+}
+
+string Account::getBank()
+{
+    return bankName;
+}
+
+string Account::getNum()
+{
+    return accountNumber;
+}
+
+string Account::getPassword()
+{
+    return password;
+}
+
+Account &Account::operator+=(int amount)
+{
+    availableFund += amount;
+    return *this;
+}
+
+Account &Account::operator-=(int amount)
+{
+    availableFund -= amount;
+    return *this;
+}
+
+
+
+class User {
+private:
+    // REQ1.6, REQ1.7, 어떤 구조로 Bank별 Account를 담을지 고민
+
+public:
+    User();
+
+};
+
+class Card
+{
+protected:
+    Bank *bank;
+    string accNum;
+    Account *cardAcc;
+
+public:
+    Card();
+    Card(Bank *b, Account *acc);
+    virtual string get_card_num() = 0;
+    virtual Bank *get_bank();
+    virtual Account *get_account();
+};
+
+Card::Card(Bank *b, Account *acc)
+{
+    this->bank = b;
+    this->cardAcc = acc;
+    this->accNum = acc->getNum();
+}
+
+string Card::get_card_num()
+{
+    return accNum;
+}
+
+Bank *Card::get_bank()
+{
+    return bank;
+}
+
+Account *Card::get_account(){
+    return cardAcc;
+}
+
+class AdminCard : Card
+{
+public:
+    AdminCard(Bank *b, Account *acc);
+    virtual string get_card_num();
+    virtual Bank *get_bank();
+    virtual Account *get_account();
+};
+
+AdminCard::AdminCard(Bank *b, Account *acc)
+{
+    this->bank = b;
+    this->accNum = acc->getNum();
+    this->cardAcc = acc;
+}
+
+
 class ATM {
 protected:
     string serial; // REQ1.1, 6-digit serial number
@@ -253,126 +378,3 @@ Account* Bank::openAccount() {
 }
 
 
-class Account
-{
-protected:
-    string bankName;
-    string userName;
-    string accountNumber;
-    string password;
-    int availableFund;
-
-public:
-    Account(string bankName, string userName, string accountNumber, int availableFund, string password);
-    int getFund();
-    string getBank();
-    string getNum();
-    string getPassword();
-    Account &operator+=(int amount);
-    Account &operator-=(int amount);
-};
-
-Account::Account(string bankName, string userName, string accountNumber, int availableFund, string password)
-{
-    cout << "Account constructor" << endl;
-    this->bankName = bankName;
-    this->userName = userName;
-    this->accountNumber = accountNumber;
-    this->availableFund = availableFund;
-    this->password = password;
-}
-
-int Account::getFund()
-{
-    return availableFund;
-}
-
-string Account::getBank()
-{
-    return bankName;
-}
-
-string Account::getNum()
-{
-    return accountNumber;
-}
-
-string Account::getPassword()
-{
-    return password;
-}
-
-Account &Account::operator+=(int amount)
-{
-    availableFund += amount;
-    return *this;
-}
-
-Account &Account::operator-=(int amount)
-{
-    availableFund -= amount;
-    return *this;
-}
-
-
-
-class User {
-private:
-    // REQ1.6, REQ1.7, 어떤 구조로 Bank별 Account를 담을지 고민
-
-public:
-    User();
-
-};
-
-class Card
-{
-protected:
-    Bank *bank;
-    string accNum;
-    Account *cardAcc;
-
-public:
-    Card();
-    Card(Bank *b, Account *acc);
-    virtual string get_card_num() = 0;
-    virtual Bank *get_bank();
-    virtual Account *get_account();
-};
-
-Card::Card(Bank *b, Account *acc)
-{
-    this->bank = b;
-    this->cardAcc = acc;
-    this->accNum = acc->getNum();
-}
-
-string Card::get_card_num()
-{
-    return accNum;
-}
-
-Bank *Card::get_bank()
-{
-    return bank;
-}
-
-Account *Card::get_account(){
-    return cardAcc;
-}
-
-class AdminCard : Card
-{
-public:
-    AdminCard(Bank *b, Account *acc);
-    virtual string get_card_num();
-    virtual Bank *get_bank();
-    virtual Account *get_account();
-};
-
-AdminCard::AdminCard(Bank *b, Account *acc)
-{
-    this->bank = b;
-    this->accNum = acc->getNum();
-    this->cardAcc = acc;
-}
