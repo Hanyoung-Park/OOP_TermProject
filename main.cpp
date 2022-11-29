@@ -275,11 +275,6 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 
 void ATM::readCardInfo(Card* card) {
     isPrimaryBank = (primaryBankName==card->get_bank()->getBankName());
-    if(isSingleBank==true && isPrimaryBank==false) {
-        cout << "The Card is invalid" << endl;
-        endSession();
-        return;
-    }
     usingAccount = card->get_account();
 }
 
