@@ -77,15 +77,35 @@ protected:
     Bank *bank;
     string accNum;
     Account *cardAcc;
+public:
+    Card ();
+    string get_card_num();
+    virtual Bank *get_bank();
+    virtual Account *get_account();
 };
+
+Card::Card()
+{
+}
+
+string Card::get_card_num()
+{
+    return accNum;
+}
+
+Bank *Card::get_bank()
+{
+    return bank;
+}
+
+Account *Card::get_account(){
+    return cardAcc;
+}
 
 class NormCard: Card
 {
 public:
     NormCard(Bank *b, Account *acc);
-    string get_card_num();
-    Bank *get_bank();
-    Account *get_account();
 };
 
 NormCard::NormCard(Bank *b, Account *acc)
@@ -95,48 +115,26 @@ NormCard::NormCard(Bank *b, Account *acc)
     this->accNum = acc->getNum();
 }
 
-string NormCard::get_card_num()
-{
-    return accNum;
-}
-
-Bank *NormCard::get_bank()
-{
-    return bank;
-}
-
-Account *NormCard::get_account(){
-    return cardAcc;
-}
-
 class AdminCard : Card
 {
 public:
-    AdminCard(Bank *b, Account *acc);
-    string get_card_num();
-    Bank *get_bank();
-    Account *get_account();
+    AdminCard(string accNum);
+    Bank *get_bank() override;
+    Account *get_account() override;
 };
 
-AdminCard::AdminCard(Bank *b, Account *acc)
+AdminCard::AdminCard(string accNum)
 {
-    this->bank = b;
-    this->accNum = acc->getNum();
-    this->cardAcc = acc;
-}
-
-string AdminCard::get_card_num()
-{
-    return accNum;
+    this->accNum = accNum;
 }
 
 Bank *AdminCard::get_bank()
 {
-    return bank;
+    return NULL;
 }
 
 Account *AdminCard::get_account(){
-    return cardAcc;
+    return NULL;
 }
 
 //-----------------------------------------------------------------------------
