@@ -166,7 +166,6 @@ protected:
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
-    void showHistory();
     void readCardInfo(Card* card);
     void startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
