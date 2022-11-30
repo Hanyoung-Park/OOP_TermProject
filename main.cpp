@@ -20,10 +20,11 @@ protected:
     string password;
     Bank* bank;
     int availableFund;
-    Card* accCard;
+    bool isAdmin;
 
 public:
-    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, Card* cardptr);
+    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin);
+    bool admin();
     int getFund();
     Bank* getBank();
     string getNum();
@@ -32,15 +33,18 @@ public:
     Account &operator-=(int amount);
 };
 
-Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, Card* cardptr)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
 {
     cout << "Account constructor" << endl;
+    this->isAdmin = isAdmin;
     this->bank = bank;
     this->userName = userName;
     this->accountNumber = accountNumber;
     this->availableFund = availableFund;
     this->password = password;
-    this->accCard = cardptr;
+    }
+bool Account::admin() {
+    return isAdmin;
 }
 
 int Account::getFund()
