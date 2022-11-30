@@ -731,6 +731,40 @@ void ATM::transfer() {
 void ATM::endSession() {
     usingAccount = NULL;
 }
+
+int ATM::execute(Card* card, bool isUnilingual) {
+    int work;
+    
+    selectLanguage(isUnilingual);
+    startSession();
+    readCardInfo(card);
+
+    if(isAdmin) {
+        adminMenu();
+        return 0;
+    } else {
+        if(isEnglish) {
+            cout << "Please select work what you want to do." << endl;
+            cout << "1: Deposit, 2: Withdrawal, 3: Transfer" << endl;
+            cin >> work;
+            switch (work) {
+                case 1:
+                    deposit();
+                    return 0;
+                case 2:
+                    withdrawal();
+                    return 0;
+                case 3:
+                    transfer();
+                    return 0;
+                default:
+                    cout << "Wrong Approach" << endl;
+                    return 0;
+            }
+        }
+        
+    }
+}
 //----------------------------------------
 map<string, Bank> bankmap;
 int fee[7];
