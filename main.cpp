@@ -3,11 +3,7 @@
 #include <string>
 #include <map>
 
-
 using namespace std;
-
-
-
 
 class ATM;
 class Bank;
@@ -452,8 +448,6 @@ void ATM::deposit() {
         writeFile << message;
         writeFile.close();
     }
-
-
 }
 
 void ATM::withdrawal() {
