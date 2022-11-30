@@ -245,6 +245,9 @@ public:
     void showHistory(); //7번
     void multiLanguageSupport(); //8번
     int calculateFee();
+    
+    int execute();
+    int adminMenu();
 
     
 };
@@ -730,6 +733,33 @@ void ATM::transfer() {
 
 void ATM::endSession() {
     usingAccount = NULL;
+}
+
+int ATM::adminMenu() {
+    int work;
+
+    if(isEnglish) {
+        cout << "Please select work what you want to do." << endl;
+        cout << "1: Information of ATM, 2: History, 3: Cancel" << endl;
+        cin >> work;
+        switch (work) {
+            case 1:
+                showInfo("serial");
+                showInfo("cash");
+                endSession();
+                return 0;
+            case 2:
+                showHistory();
+                endSession();
+                return 0;
+            case 3:
+                cout << "Canceled" << endl;
+                return 0;
+            default:
+                cout << "Wrong Approach" << endl;
+                return 0;
+        }
+    }
 }
 
 int ATM::execute(Card* card, bool isUnilingual) {
