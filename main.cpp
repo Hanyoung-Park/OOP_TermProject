@@ -183,14 +183,14 @@ public:
     void showInfo(string val);
     int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
-    void selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
+    void selectLanguage(); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
     void deposit(); //4번
     void withdrawal(); //5번
     void transfer(); //6번
     void showHistory(); //7번
     
-    int execute(bool isUnilingual);
+    int execute();
     int adminMenu();
 };
 
@@ -237,7 +237,7 @@ void ATM::showHistory() {
 }
 
 int ATM::startSession() {
-    selectLanguage(isUnilingual);
+    selectLanguage();
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
     } else {
@@ -268,7 +268,7 @@ int ATM::startSession() {
      endSession();
 }
 
-void ATM::selectLanguage(bool isUnilingual) {
+void ATM::selectLanguage() {
     if(isUnilingual==true) {
         cout << "It is set to English." << endl;
         isEnglish = true;
@@ -285,7 +285,7 @@ void ATM::selectLanguage(bool isUnilingual) {
         } else {
             cout << "Please enter the correct character." << endl;
             cout << "Return to the initial screen." << endl;
-            selectLanguage(isUnilingual);
+            selectLanguage();
         }
     }
 }
@@ -338,7 +338,7 @@ void ATM::deposit() {
         cin >> temp;
         if(temp=='C' || temp=='c') {
             cout << "Canceled" << endl;
-            endSession()
+            endSession();
             return;
         }
         usingAccount += depositMoney;
@@ -384,7 +384,7 @@ void ATM::deposit() {
         cin >> temp;
         if(temp=='C' || temp=='c') {
             cout << "거래가 취소되었습니다." << endl;
-            endSession()
+            endSession();
             return;
         }
         usingAccount += depositMoney;
@@ -463,7 +463,7 @@ void ATM::withdrawal() {
             cin >> temp;
             if(temp=='C' || temp=='c') {
                 cout << "Canceled" << endl;
-                endSession()
+                endSession();
                 return;
             }
             usingAccount -= includingFee;
@@ -507,7 +507,7 @@ void ATM::withdrawal() {
             cin >> temp;
             if(temp=='C' || temp=='c') {
                 cout << "거래가 취소되었습니다." << endl;
-                endSession()
+                endSession();
                 return;
             } 
             usingAccount -= includingFee;
@@ -759,10 +759,10 @@ int ATM::adminMenu() {
     }
 }
 
-int ATM::execute(bool isUnilingual) {
+int ATM::execute() {
     int work;
     
-    selectLanguage(isUnilingual);
+    selectLanguage();
     startSession();
 
     if(isAdmin) {
