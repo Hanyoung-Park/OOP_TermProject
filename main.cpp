@@ -40,7 +40,6 @@ public:
 
 Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
 {
-    cout << "Account constructor" << endl;
     this->isAdmin = isAdmin;
     this->bank = bank;
     this->userName = userName;
@@ -216,11 +215,12 @@ void ATM::readCardInfo(string accNum) {
             }
         }
     }
-
-    cout << "done" << endl;
+    if (usingAccount==NULL){
+        cout << "No account found, returning card" << endl;
+        endSession();
+        return;
+    }
     cout << usingAccount->getNum() << endl;
-
-
     
     isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
     isAdmin = usingAccount->admin();

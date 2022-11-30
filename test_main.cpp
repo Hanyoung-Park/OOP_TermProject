@@ -40,7 +40,6 @@ public:
 
 Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
 {
-    cout << "Account constructor" << endl;
     this->isAdmin = isAdmin;
     this->bank = bank;
     this->userName = userName;
@@ -204,22 +203,7 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 }
 
 void ATM::readCardInfo(string accNum) {
-    map<string, Bank*>::iterator it;
-    for (it = bankmap.begin(); it!= bankmap.end(); it++) {
-        map<string, Account*> tempmap;
-        tempmap = it->second->getAccountMap();
-        map<string, Account*>::iterator it2;
-        for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
-            if(it2->first == accNum) {
-                usingAccount = it2->second;
-                break;
-            }
-        }
-        break;
-    }
-
-    isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
-    isAdmin = usingAccount->admin();
+    usingAccount = bankmap.at("Kakao")->getAccountMap().at(accNum);
 }
 
 
@@ -478,7 +462,7 @@ void ATM::withdrawal() {
             cout << "If you want to cancel, please type [C]" << endl;
             char temp;
             cin >> temp;
-            if(temp=='C' || temp=='c' || temp=='') {
+            if(temp=='C' || temp=='c') {
                 cout << "Canceled" << endl;
                 endSession();
                 return;
