@@ -23,7 +23,7 @@ protected:
     bool isAdmin;
 
 public:
-    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin);
+    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
     bool admin();
     int getFund();
     Bank* getBank();
@@ -33,7 +33,7 @@ public:
     Account &operator-=(int amount);
 };
 
-Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false)
 {
     cout << "Account constructor" << endl;
     this->isAdmin = isAdmin;
@@ -126,6 +126,7 @@ Account* Bank::openAccount(int card_num=0) {
     string accountNum;
     string password;
     int fund;
+    bool admin;
     cout << "input Bank Name: " << endl;
     cin >> bankName;
     cout << "input User Name: " << endl;
@@ -136,9 +137,11 @@ Account* Bank::openAccount(int card_num=0) {
     cin >> password;
     cout << "input available fund: " << endl;
     cin >> fund;
+    cout << "input is admin(true/false):  " << endl;
+    cin >> admin;
 
     Account* newAccount;
-    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
+    newAccount = new Account(this, userName, accountNum, fund, password, admin); //Account class에 password 추가
     account_info.insert(pair<string, Account*>(accountNum, newAccount));
     return newAccount;
 
@@ -164,8 +167,8 @@ protected:
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
+    void readCardInfo(Account* userAccount);
     void showInfo(string val);
-    void readCardInfo(Card* card);
     int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
@@ -178,10 +181,8 @@ public:
     void multiLanguageSupport(); //8번
     int calculateFee();
     
-    int execute();
+    int execute(Account* account, bool isUnilingual);
     int adminMenu();
-
-    
 };
 
 ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes) {
@@ -192,11 +193,10 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
-void ATM::readCardInfo(Card* card) {
-    isPrimaryBank = (primaryBankName==card->get_bank()->getBankName());
-    usingAccount = card->get_account();
-    if (usingAccount == NULL)
-        isAdmin = true;
+void ATM::readCardInfo(Account* userAccount) {
+    isPrimaryBank = (primaryBankName==userAccount->getBank()->getBankName());
+    isAdmin = userAccount->admin();
+    usingAccount = userAccount;
 }
 
 void ATM::showInfo(string val) {
@@ -694,12 +694,12 @@ int ATM::adminMenu() {
     }
 }
 
-int ATM::execute(Card* card, bool isUnilingual) {
+int ATM::execute(Account* account, bool isUnilingual) {
     int work;
     
     selectLanguage(isUnilingual);
     startSession();
-    readCardInfo(card);
+    readCardInfo(account);
 
     if(isAdmin) {
         adminMenu();
