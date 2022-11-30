@@ -203,8 +203,11 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
+
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
+    int valid = 0;
+    int n;
     for (it = bankmap.begin(); it!= bankmap.end(); it++) {
         map<string, Account*> tempmap;
         tempmap = it->second->getAccountMap();
@@ -213,6 +216,7 @@ void ATM::readCardInfo(string accNum) {
         for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
             if(accNum == it2->second->getNum()) {
                 usingAccount = it2->second;
+                valid = 1;
             }
         }
     }
@@ -221,11 +225,21 @@ void ATM::readCardInfo(string accNum) {
         endSession();
         return;
     }
-    cout << usingAccount->getNum() << endl;
+    try {
+        if (valid == 0) {
+            throw n;
+        }
+        isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
+        isAdmin = usingAccount->admin();
+    }
+    catch (int ex) {
+        cout << "Do not Exist" << endl;
+        this->endSession();
     
-    isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
-    isAdmin = usingAccount->admin();
+    }
 }
+
+
 
 
 
