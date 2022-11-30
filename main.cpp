@@ -458,6 +458,14 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
+            cout << "If you want to cancel, please type [C]" << endl;
+            string temp;
+            cin >> temp;
+            if(temp=='C' || temp=='c') {
+                cout << "Canceled" << endl;
+                endSession()
+                return;
+            }
             usingAccount -= includingFee;
             cout << "Your withdrawal has been successful." << endl;
 
@@ -492,6 +500,14 @@ void ATM::withdrawal() {
             if(amountOfCashes<includingFee) {
                 cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
                 endSession();
+                return;
+            }
+            cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
+            string temp;
+            cin >> temp;
+            if(temp=='C' || temp=='c') {
+                cout << "거래가 취소되었습니다." << endl;
+                endSession()
                 return;
             } 
             usingAccount -= includingFee;
