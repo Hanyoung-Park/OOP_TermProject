@@ -183,15 +183,12 @@ public:
     void showInfo(string val);
     int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
-    bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
     void selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
     void deposit(); //4번
     void withdrawal(); //5번
     void transfer(); //6번
     void showHistory(); //7번
-    void multiLanguageSupport(); //8번
-    int calculateFee();
     
     int execute(Account* account, bool isUnilingual);
     int adminMenu();
@@ -784,4 +781,3 @@ int main() {
     //Test Case : Action3
     return 0;
 }
-
