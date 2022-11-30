@@ -142,7 +142,7 @@ public:
     ~Bank();
     int validPassword(Account userAccount, int num);
     Account* returnAccount(string accountNumber);
-    Account* openAccount();
+    Account* openAccount(int card_num=0);
     string getBankName();
     map<string, Account*> getAccountMap();
     Card* createCard(int card_num=0);
@@ -174,7 +174,7 @@ map<string, Account*> Bank::getAccountMap() {
     return account_info;
 }
 
-Account* Bank::openAccount() {
+Account* Bank::openAccount(int card_num=0) {
     string bankName;
     string userName;
     string accountNum;
@@ -192,7 +192,7 @@ Account* Bank::openAccount() {
     cin >> fund;
 
     Account* newAccount;
-    Card* new_card = createCard();
+    Card* new_card = createCard(card_num);
     newAccount = new Account(this, userName, accountNum, fund, password, new_card); //Account class에 password 추가
     account_info.insert(pair<string, Account*>(cardNum, newAccount));
     return newAccount;
