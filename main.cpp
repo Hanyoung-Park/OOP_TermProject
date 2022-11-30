@@ -277,13 +277,16 @@ int ATM::startSession() {
         }
         endSession();
     }
-    for (int i=0; i < 3; i++){
+    int i = 0;
+    while(i < 3){
         Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
-         if (acc == nullptr)
-             ;
-         else
+        if (acc == nullptr){
+             cout << "Wrong password, Please enter your password again" << endl;
+             i++;
+        }else{
              break;
              return 0;
+        }
      }
      endSession();
 }
@@ -756,6 +759,7 @@ void ATM::transfer() {
 
 void ATM::endSession() {
     usingAccount = nullptr;
+    cout << "END SESSION" << endl;
 }
 
 int ATM::adminMenu() {
