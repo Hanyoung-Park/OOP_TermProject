@@ -9,7 +9,6 @@ class ATM;
 class Bank;
 class Account;
 class User;
-class Card;
 
 //-----------------------------------------------------------------------------
 
@@ -74,60 +73,6 @@ Account &Account::operator-=(int amount)
 {
     availableFund -= amount;
     return *this;
-}
-
-class Card
-{
-protected:
-    Bank *bank;
-    string cardNum;
-public:
-    Card ();
-    string get_card_num();
-    virtual Bank *get_bank();
-};
-
-Card::Card()
-{
-}
-
-string Card::get_card_num()
-{
-    return cardNum;
-}
-
-Bank *Card::get_bank()
-{
-    return bank;
-}
-
-class NormCard: public Card
-{
-public:
-    NormCard(Bank *b, string cardNum);
-};
-
-NormCard::NormCard(Bank *b, string cardNum)
-{
-    this->bank = b;
-    this->cardNum = cardNum;
-}
-
-class AdminCard : public Card
-{
-public:
-    AdminCard(string cardNum);
-    Bank *get_bank() override;
-};
-
-AdminCard::AdminCard(string cardNum)
-{
-    this->cardNum = cardNum;
-}
-
-Bank *AdminCard::get_bank()
-{
-    return NULL;
 }
 
 //-----------------------------------------------------------------------------
