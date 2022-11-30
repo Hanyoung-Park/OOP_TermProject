@@ -292,15 +292,20 @@ void ATM::selectLanguage(bool isUnilingual) {
 
 void ATM::deposit() {
     int depositMoney;
-    bool isCheck;
+    int isCheck;
     string message;
     int moneyArr[4];
     int amountOfCheck;
     if(isEnglish==true) {
         cout << "Please choose between cash or check." << endl;
-        cout << "Cash: 0, Check: 1" << endl;
+        cout << "Cash: 0, Check: 1, Cancel: 2" << endl;
         cin >> isCheck;
-        if(isCheck==false) {
+        if(isCheck==2) {
+            cout << "Canceled" << endl;
+            endSession();
+            return;
+        }
+        if(isCheck==0) {
             cout << "Please enter the number of 50,000 won notes to be deposited." << endl;
             cin >> moneyArr[0];
             cout << "Please enter the number of 10,000 won notes to be deposited." << endl;
@@ -309,6 +314,7 @@ void ATM::deposit() {
             cin >> moneyArr[2];
             cout << "Please enter the number of 1,000 won notes to be deposited." << endl;
             cin >> moneyArr[3];
+            
             if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
                 cout << "Too many banknotes" << endl;
                 endSession();
@@ -327,13 +333,26 @@ void ATM::deposit() {
             cout << "Please enter the amount of fund to deposit." << endl;
             cin >> depositMoney;
         }
+        cout << "If you want to cancel, please type [C]" << endl;
+        string temp;
+        cin >> temp;
+        if(temp=='C' || temp=='c') {
+            cout << "Canceled" << endl;
+            endSession()
+            return;
+        }
         usingAccount += depositMoney;
         cout << "Your deposit has been succesful." << endl;
     } else {
         cout << "현금과 수표 중 사용하실 방법을 선택해주세요." << endl;
-        cout << "현금: 0, 수표: 1" << endl;
+        cout << "현금: 0, 수표: 1, 취소: 2" << endl;
         cin >> isCheck;
-        if(isCheck==false) {
+        if(isCheck==2) {
+            cout << "거래가 취소되었습니다." << endl;
+            endSession();
+            return;
+        }
+        if(isCheck==0) {
             cout << "입금할 5만원권 장수를 입력해주세요." << endl;
             cin >> moneyArr[0];
             cout << "입금할 만원권 장수를 입력해주세요" << endl;
@@ -360,7 +379,14 @@ void ATM::deposit() {
             cout << "입금할 금액을 입력해주세요." << endl;
             cin >> depositMoney;
         }
-        
+        cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
+        string temp;
+        cin >> temp;
+        if(temp=='C' || temp=='c') {
+            cout << "거래가 취소되었습니다." << endl;
+            endSession()
+            return;
+        }
         usingAccount += depositMoney;
         cout << "입금이 성공적으로 완료되었습니다." << endl;
     }
