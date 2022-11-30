@@ -10,7 +10,8 @@ class Bank;
 class Account;
 class User;
 
-int fee[7];
+int fee[7] = [1000, 0, 1000, 2000, 2000, 3000, 4000];
+// int fee[7];
 map<string, Bank*> bankmap;
 
 
