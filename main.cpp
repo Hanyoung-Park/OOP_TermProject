@@ -10,6 +10,10 @@ class Bank;
 class Account;
 class User;
 
+int fee[7];
+map<string, Bank*> bankmap;
+
+
 //-----------------------------------------------------------------------------
 
 class Account
@@ -33,7 +37,7 @@ public:
     Account &operator-=(int amount);
 };
 
-Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
 {
     cout << "Account constructor" << endl;
     this->isAdmin = isAdmin;
@@ -90,7 +94,7 @@ public:
     ~Bank();
     int validPassword(Account userAccount, int num);
     Account* returnAccount(string accountNumber);
-    Account* openAccount(int card_num=0);
+    Account* openAccount();
     string getBankName();
     map<string, Account*> getAccountMap();
 };
@@ -120,7 +124,7 @@ map<string, Account*> Bank::getAccountMap() {
     return account_info;
 }
 
-Account* Bank::openAccount(int card_num=0) {
+Account* Bank::openAccount() {
     string bankName;
     string userName;
     string accountNum;
@@ -728,8 +732,6 @@ int ATM::execute(Account* account, bool isUnilingual) {
     }
 }
 //----------------------------------------
-map<string, Bank*> bankmap;
-int fee[7];
 
 void init_fee() {
     cout << "Please type the deposit fee for non-primary banks" << endl;
@@ -748,19 +750,19 @@ void init_fee() {
     cin >> fee[6];
 }
 
-void main() {
+int main() {
 
     //Initial Conditions
     bankmap.insert(pair<string, Bank*>("Kakao", &Bank("Kakao")));
     bankmap.insert(pair<string, Bank*>("Shinhan", &Bank("Shinhan")));
 
     Account* Account1 = bankmap.at("Kakao")->openAccount();
-    Account* Account1 = bankmap.at("Shinhan")->openAccount();
-    Account* Account1 = bankmap.at("Kakao")->openAccount();
+    Account* Account2 = bankmap.at("Shinhan")->openAccount();
+    Account* Account3 = bankmap.at("Kakao")->openAccount();
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
     ATM* ATM2 = new ATM("Shinhan", "222222", false, false, 0);
-    ATM* ATM1 = new ATM("Kakao", "333333", false, false, 2000);
+    ATM* ATM3 = new ATM("Kakao", "333333", false, false, 2000);
 
     //Test Case : Action1
     ATM1->startSession();
@@ -769,6 +771,6 @@ void main() {
 
 
     //Test Case : Action3
-
+    return 0;
 }
 
