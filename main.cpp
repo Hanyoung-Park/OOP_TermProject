@@ -206,21 +206,30 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
     for (it = bankmap.begin(); it!= bankmap.end(); it++) {
+        cout << "HREE" << endl;
+        cout << it->first << endl;
         map<string, Account*> tempmap;
         tempmap = it->second->getAccountMap();
         map<string, Account*>::iterator it2;
+
         for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
-            if(it2->first == accNum) {
+            cout << "it2 first " << it2->first << endl;
+            cout << "it2 second " << it2->second->getNum() << endl;
+            if(accNum == it2->second->getNum()) {
+                cout << "find" << endl;
                 usingAccount = it2->second;
-                break;
             }
         }
-        break;
     }
+
+    cout << "done" << endl;
+    cout << usingAccount->getNum() << endl;
+
 
     isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
     isAdmin = usingAccount->admin();
 }
+
 
 
 void ATM::showInfo(string val) {
