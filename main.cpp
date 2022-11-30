@@ -10,7 +10,7 @@ class Bank;
 class Account;
 class User;
 
-int fee[7] = [1000, 0, 1000, 2000, 2000, 3000, 4000];
+int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
 // int fee[7];
 map<string, Bank*> bankmap;
 
@@ -206,7 +206,6 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
     for (it = bankmap.begin(); it!= bankmap.end(); it++) {
-        cout << "HRE" << endl;
         map<string, Account*> tempmap;
         tempmap = it->second->getAccountMap();
         map<string, Account*>::iterator it2;
@@ -253,7 +252,7 @@ void ATM::showHistory() {
 }
 
 int ATM::startSession() {
-    selectLanguage();
+    // selectLanguage();
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
     } else {
