@@ -842,7 +842,7 @@ int main() {
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
     //Test Case : Action1
-    ATM1->startSession();
+    ATM1->execute();
 
     //Test Case : Action2
 
