@@ -97,6 +97,8 @@ public:
     Account* openAccount();
     string getBankName();
     map<string, Account*> getAccountMap();
+    Account* initAccount(string bank, string user, string acc, string pass, int fund, bool admin);
+
 };
 
 Bank::Bank(string bankName) {
@@ -148,7 +150,13 @@ Account* Bank::openAccount() {
     newAccount = new Account(this, userName, accountNum, fund, password, admin); //Account class에 password 추가
     account_info.insert(pair<string, Account*>(accountNum, newAccount));
     return newAccount;
+}
 
+Account* Bank::initAccount(string bank, string user, string acc, string pass, int fund, bool admin) {
+    Account* newAccount;
+    newAccount = new Account(this, user, acc, fund, pass, admin); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(acc, newAccount));
+    return newAccount;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -753,19 +761,19 @@ void init_fee() {
 int main() {
 
     Bank Kakao = Bank("Kakao");
-    Bank Shinhan = Bank("Shinhan");
+    Bank Daegu = Bank("Daegu");
 
     //Initial Conditions
     bankmap.insert(pair<string, Bank*>("Kakao", &Kakao));
-    bankmap.insert(pair<string, Bank*>("Shinhan", &Shinhan));
+    bankmap.insert(pair<string, Bank*>("Daegu", &Daegu));
 
-    Account* Account1 = bankmap.at("Kakao")->openAccount();
-    Account* Account2 = bankmap.at("Shinhan")->openAccount();
-    Account* Account3 = bankmap.at("Kakao")->openAccount();
+    Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "111-111-111111", "cooldavid", 5000, false);
+    Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
+    Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
 
-    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
-    ATM* ATM2 = new ATM("Shinhan", "222222", false, false, 0);
-    ATM* ATM3 = new ATM("Kakao", "333333", false, false, 2000);
+    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
+    ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
+    ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
     //Test Case : Action1
     ATM1->startSession();
