@@ -752,9 +752,12 @@ void init_fee() {
 
 int main() {
 
+    Bank Kakao = Bank("Kakao");
+    Bank Shinhan = Bank("Shinhan");
+
     //Initial Conditions
-    bankmap.insert(pair<string, Bank*>("Kakao", &Bank("Kakao")));
-    bankmap.insert(pair<string, Bank*>("Shinhan", &Bank("Shinhan")));
+    bankmap.insert(pair<string, Bank*>("Kakao", &Kakao));
+    bankmap.insert(pair<string, Bank*>("Shinhan", &Shinhan));
 
     Account* Account1 = bankmap.at("Kakao")->openAccount();
     Account* Account2 = bankmap.at("Shinhan")->openAccount();
