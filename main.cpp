@@ -258,7 +258,7 @@ public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     void showInfo(string val);
     void readCardInfo(Card* card);
-    void startSession();
+    int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     bool checkExceptionalCondition(); // REQ2.2에 써먹기 및 9번
     void selectLanguage(bool isUnilingual); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
@@ -316,7 +316,7 @@ void ATM::showHistory() {
     endSession();
 }
 
-void ATM::startSession() {
+int ATM::startSession() {
     selectLanguage(isUnilingual);
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
@@ -331,6 +331,15 @@ void ATM::startSession() {
         }
         endSession();
     }
+    for (int i=0; i < 3; i++){
+        Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
+         if (acc == nullptr)
+             ;
+         else
+             break;
+             return 0;
+     }
+     endSession();
 }
 
 void ATM::selectLanguage(bool isUnilingual) {
