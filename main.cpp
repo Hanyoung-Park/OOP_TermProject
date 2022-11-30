@@ -205,6 +205,7 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
     for (it = bankmap.begin(); it!= bankmap.end(); it++) {
+        cout << "HRE" << endl;
         map<string, Account*> tempmap;
         tempmap = it->second->getAccountMap();
         map<string, Account*>::iterator it2;
@@ -842,7 +843,7 @@ int main() {
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
     //Test Case : Action1
-    ATM1->execute();
+    ATM2->execute();
 
     //Test Case : Action2
 
