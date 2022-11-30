@@ -438,7 +438,9 @@ void ATM::deposit() {
         amountOfCashes += depositMoney;
     }
     if(isPrimaryBank==false) {
-        usingAccount -= 1000;
+        usingAccount -= fee[0];
+    } else {
+        usingAccount -= fee[1];
     }
     TransactionID += 1;
     message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
@@ -448,6 +450,8 @@ void ATM::deposit() {
         writeFile << message;
         writeFile.close();
     }
+
+
 }
 
 void ATM::withdrawal() {
@@ -458,9 +462,9 @@ void ATM::withdrawal() {
     string keepGoing;
 
     if(isPrimaryBank) {
-        includingFee = 1000;
+        includingFee = fee[2];
     } else {
-        includingFee = 2000;
+        includingFee = fee[3];
     }
 
     while(1) {
@@ -623,8 +627,8 @@ void ATM::transfer() {
                 return;
             }
             transferMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
-            if(transferBankName == primaryBankName) transferFee = 2000;
-            else transferFee = 3000;
+            if(transferBankName == primaryBankName) transferFee = fee[4];
+            else transferFee = fee[5];
             cout << "Please insert "<< transferMoney+transferFee << ". (including transfer fee)" << endl;
             
         } else {
@@ -632,11 +636,11 @@ void ATM::transfer() {
             cin >> transferMoney;
             // Transfer Case 판별
             if(isPrimaryBank && transferBankName==primaryBankName) {
-                transferFee = 2000;
+                transferFee = fee[4];
             } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
-                transferFee = 3000;
+                transferFee = fee[5];
             } else {
-                transferFee = 4000;
+                transferFee = fee[6];
             }
             if(transferMoney+transferFee>usingAccount->getFund()) {
                 cout << "Sorry, there are not enough funds in the account." << endl;
@@ -747,5 +751,23 @@ void ATM::transfer() {
 void ATM::endSession() {
     usingAccount = NULL;
 }
-
+//----------------------------------------
 map<string, Bank> bankmap;
+int fee[7];
+
+void init_fee() {
+    cout << "Please type the deposit fee for non-primary banks" << endl;
+    cin >> fee[0];
+    cout << "Please type the deposit fee for primary banks" << endl;
+    cin >> fee[1];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[2];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[3];
+    cout << "Please type the transfer fee between primary banks" << endl;
+    cin >> fee[4];
+    cout << "Please type the transfer fee between primary and non-primary banks" << endl;
+    cin >> fee[5];
+    cout << "Please type the transfer fee between non-primary banks" << endl;
+    cin >> fee[6];
+}
