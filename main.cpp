@@ -21,9 +21,10 @@ protected:
     string password;
     Bank* bank;
     int availableFund;
+    Card* accCard;
 
 public:
-    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password);
+    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, Card* cardptr);
     int getFund();
     Bank* getBank();
     string getNum();
@@ -32,7 +33,7 @@ public:
     Account &operator-=(int amount);
 };
 
-Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password)
+Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, Card* cardptr)
 {
     cout << "Account constructor" << endl;
     this->bank = bank;
@@ -40,6 +41,7 @@ Account::Account(Bank* bank, string userName, string accountNumber, int availabl
     this->accountNumber = accountNumber;
     this->availableFund = availableFund;
     this->password = password;
+    this->accCard = cardptr;
 }
 
 int Account::getFund()
@@ -78,13 +80,11 @@ class Card
 {
 protected:
     Bank *bank;
-    string accNum;
-    Account *cardAcc;
+    string cardNum;
 public:
     Card ();
     string get_card_num();
     virtual Bank *get_bank();
-    virtual Account *get_account();
 };
 
 Card::Card()
@@ -93,7 +93,7 @@ Card::Card()
 
 string Card::get_card_num()
 {
-    return accNum;
+    return cardNum;
 }
 
 Bank *Card::get_bank()
@@ -101,42 +101,32 @@ Bank *Card::get_bank()
     return bank;
 }
 
-Account *Card::get_account(){
-    return cardAcc;
-}
-
-class NormCard: Card
+class NormCard: public Card
 {
 public:
-    NormCard(Bank *b, Account *acc);
+    NormCard(Bank *b, string cardNum);
 };
 
-NormCard::NormCard(Bank *b, Account *acc)
+NormCard::NormCard(Bank *b, string cardNum)
 {
     this->bank = b;
-    this->cardAcc = acc;
-    this->accNum = acc->getNum();
+    this->cardNum = cardNum;
 }
 
-class AdminCard : Card
+class AdminCard : public Card
 {
 public:
-    AdminCard(string accNum);
+    AdminCard(string cardNum);
     Bank *get_bank() override;
-    Account *get_account() override;
 };
 
-AdminCard::AdminCard(string accNum)
+AdminCard::AdminCard(string cardNum)
 {
-    this->accNum = accNum;
+    this->cardNum = cardNum;
 }
 
 Bank *AdminCard::get_bank()
 {
-    return NULL;
-}
-
-Account *AdminCard::get_account(){
     return NULL;
 }
 
@@ -155,7 +145,8 @@ public:
     Account* openAccount();
     string getBankName();
     map<string, Account*> getAccountMap();
-    Card* createCard(Account* acc, int card_num=0);
+    Card* createCard(int card_num=0);
+    string cardNum;
 };
 
 Bank::Bank(string bankName) {
@@ -201,13 +192,23 @@ Account* Bank::openAccount() {
     cin >> fund;
 
     Account* newAccount;
-    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    Card* new_card = createCard();
+    newAccount = new Account(this, userName, accountNum, fund, password, new_card); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(cardNum, newAccount));
     return newAccount;
 
 }
 
-Card* Bank::createCard(Account* acc, int card_num=0){
+Card* Bank::createCard(int card_num=0){
+    if (card_num == 0){
+        int random = rand() % 12;
+        cardNum = to_string(random);
+    }
+    else{
+        cardNum = to_string(card_num);
+    }
+    Card* cardptr = new NormCard(this, cardNum);
+    return cardptr;
 
 }
 
@@ -749,4 +750,28 @@ void init_fee() {
     cin >> fee[5];
     cout << "Please type the transfer fee between non-primary banks" << endl;
     cin >> fee[6];
+}
+
+void main() {
+
+    //Initial Conditions
+    bankmap.insert(pair<string, Bank>("Kakao", Bank("Kakao")));
+    bankmap.insert(pair<string, Bank>("Shinhan", Bank("Shinhan")));
+
+    Account* Account1 = bankmap.at("Kakao").openAccount();
+    Account* Account1 = bankmap.at("Shinhan").openAccount();
+    Account* Account1 = bankmap.at("Kakao").openAccount();
+
+    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
+    ATM* ATM2 = new ATM("Shinhan", "222222", false, false, 0);
+    ATM* ATM1 = new ATM("Kakao", "333333", false, false, 2000);
+
+    //Test Case : Action1
+    ATM1->startSession();
+
+    //Test Case : Action2
+
+
+    //Test Case : Action3
+
 }
