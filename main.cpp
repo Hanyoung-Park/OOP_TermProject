@@ -294,9 +294,11 @@ void ATM::selectLanguage() {
         if(language=="K" || language=="[K]" || language=="k" || language=="[k]") {
             cout << "한국어로 설정되었습니다." << endl;
             isEnglish = false;
+            return;
         } else if(language=="E" || language=="[E]" || language=="e" || language=="[e]") {
             cout << "It is set to English." << endl;
             isEnglish = true;
+            return;
         } else {
             cout << "Please enter the correct character." << endl;
             cout << "Return to the initial screen." << endl;
