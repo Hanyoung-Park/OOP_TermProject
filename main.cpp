@@ -80,7 +80,6 @@ Account &Account::operator-=(int amount)
 }
 
 //-----------------------------------------------------------------------------
-
 class Bank {
 protected:
     string bankName;
@@ -94,8 +93,6 @@ public:
     Account* openAccount(int card_num=0);
     string getBankName();
     map<string, Account*> getAccountMap();
-    Card* createCard(int card_num=0);
-    string cardNum;
 };
 
 Bank::Bank(string bankName) {
@@ -141,23 +138,9 @@ Account* Bank::openAccount(int card_num=0) {
     cin >> fund;
 
     Account* newAccount;
-    Card* new_card = createCard(card_num);
-    newAccount = new Account(this, userName, accountNum, fund, password, new_card); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(cardNum, newAccount));
+    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
+    account_info.insert(pair<string, Account*>(accountNum, newAccount));
     return newAccount;
-
-}
-
-Card* Bank::createCard(int card_num=0){
-    if (card_num == 0){
-        int random = rand() % 12;
-        cardNum = to_string(random);
-    }
-    else{
-        cardNum = to_string(card_num);
-    }
-    Card* cardptr = new NormCard(this, cardNum);
-    return cardptr;
 
 }
 
