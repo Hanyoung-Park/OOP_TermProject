@@ -495,7 +495,7 @@ void ATM::transfer() {
             cout << "Please enter the bank of the account you want to transfer money to." << endl;
             cin >> transferBankName;
             if(bankmap[transferBankName]!=NULL) {
-                transferBank = &bankmap[transferBankName];
+                transferBank = bankmap[transferBankName];
                 account_info = transferBank->getAccountMap();
             } else {
                 cout << "Please enter an appropriate name of bank." << endl;
@@ -578,8 +578,8 @@ void ATM::transfer() {
             string transferBankName;
             cout << "송금할 계좌의 은행명을 입력해주세요." << endl;
             cin >> transferBankName;
-            if(bankmap[transferBankName]!=NULL) {
-                transferBank = &bankmap[transferBankName];
+            if(bankmap[transferBankName] != NULL) {
+                transferBank = bankmap[transferBankName];
                 account_info = transferBank->getAccountMap();
             } else {
                 cout << "정확한 은행명을 입력해주세요." << endl;
@@ -728,7 +728,7 @@ int ATM::execute(Account* account, bool isUnilingual) {
     }
 }
 //----------------------------------------
-map<string, Bank> bankmap;
+map<string, Bank*> bankmap;
 int fee[7];
 
 void init_fee() {
