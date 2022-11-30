@@ -155,8 +155,7 @@ public:
     Account* openAccount();
     string getBankName();
     map<string, Account*> getAccountMap();
-    
-
+    Card* createCard(Account* acc, int card_num=0);
 };
 
 Bank::Bank(string bankName) {
@@ -208,27 +207,7 @@ Account* Bank::openAccount() {
 
 }
 
-Account* Bank::openAccount() {
-    string bankName;
-    string userName;
-    string accountNum;
-    string password;
-    int fund;
-    cout << "input Bank Name: " << endl;
-    cin >> bankName;
-    cout << "input User Name: " << endl;
-    cin >> userName;
-    cout << "input Account Number(12-digit): " << endl;
-    cin >> accountNum;
-    cout << "input Password: " << endl;
-    cin >> password;
-    cout << "input available fund: " << endl;
-    cin >> fund;
-
-    Account* newAccount;
-    newAccount = new Account(this, userName, accountNum, fund, password); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(accountNum, newAccount));
-    return newAccount;
+Card* Bank::createCard(Account* acc, int card_num=0){
 
 }
 
