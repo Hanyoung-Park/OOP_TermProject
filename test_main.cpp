@@ -10,7 +10,8 @@ class Bank;
 class Account;
 class User;
 
-int fee[7];
+int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
+// int fee[7];
 map<string, Bank*> bankmap;
 
 
@@ -203,11 +204,24 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 }
 
 void ATM::readCardInfo(string accNum) {
-    // isPrimaryBank = (primaryBankName==userAccount->getBank()->getBankName());
-    // isAdmin = userAccount->admin();
-    usingAccount = bankmap.at("Kakao")->getAccountMap().at(accNum);
-    // usingAccount = userAccount;
+    map<string, Bank*>::iterator it;
+    for (it = bankmap.begin(); it!= bankmap.end(); it++) {
+        map<string, Account*> tempmap;
+        tempmap = it->second->getAccountMap();
+        map<string, Account*>::iterator it2;
+        for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
+            if(it2->first == accNum) {
+                usingAccount = it2->second;
+                break;
+            }
+        }
+        break;
+    }
+
+    isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
+    isAdmin = usingAccount->admin();
 }
+
 
 void ATM::showInfo(string val) {
     if(isAdmin == false) {
@@ -238,7 +252,7 @@ void ATM::showHistory() {
 }
 
 int ATM::startSession() {
-    selectLanguage();
+    // selectLanguage();
     if(isEnglish==true) {
         cout << "Welcome\nTo start, please insert your debit card." << endl;
     } else {
@@ -270,7 +284,6 @@ int ATM::startSession() {
 }
 
 void ATM::selectLanguage() {
-    cout << "HERE" << endl;
     if(isUnilingual==true) {
         cout << "It is set to English." << endl;
         isEnglish = true;
@@ -281,9 +294,11 @@ void ATM::selectLanguage() {
         if(language=="K" || language=="[K]" || language=="k" || language=="[k]") {
             cout << "한국어로 설정되었습니다." << endl;
             isEnglish = false;
+            return;
         } else if(language=="E" || language=="[E]" || language=="e" || language=="[e]") {
             cout << "It is set to English." << endl;
             isEnglish = true;
+            return;
         } else {
             cout << "Please enter the correct character." << endl;
             cout << "Return to the initial screen." << endl;
@@ -463,7 +478,7 @@ void ATM::withdrawal() {
             cout << "If you want to cancel, please type [C]" << endl;
             char temp;
             cin >> temp;
-            if(temp=='C' || temp=='c') {
+            if(temp=='C' || temp=='c' || temp=='') {
                 cout << "Canceled" << endl;
                 endSession();
                 return;
@@ -773,7 +788,7 @@ int ATM::execute() {
     } else {
         if(isEnglish) {
             cout << "Please select work what you want to do." << endl;
-            cout << "1: Deposit, 2: Withdrawal, 3: Transfer" << endl;
+            cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
             cin >> work;
             switch (work) {
                 case 1:
@@ -784,6 +799,9 @@ int ATM::execute() {
                     return 0;
                 case 3:
                     transfer();
+                    return 0;
+                case 4:
+                    cout << "Canceled" << endl;
                     return 0;
                 default:
                     cout << "Wrong Approach" << endl;
