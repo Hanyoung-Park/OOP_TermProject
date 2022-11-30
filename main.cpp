@@ -751,12 +751,12 @@ void init_fee() {
 void main() {
 
     //Initial Conditions
-    bankmap.insert(pair<string, Bank>("Kakao", Bank("Kakao")));
-    bankmap.insert(pair<string, Bank>("Shinhan", Bank("Shinhan")));
+    bankmap.insert(pair<string, Bank*>("Kakao", &Bank("Kakao")));
+    bankmap.insert(pair<string, Bank*>("Shinhan", &Bank("Shinhan")));
 
-    Account* Account1 = bankmap.at("Kakao").openAccount();
-    Account* Account1 = bankmap.at("Shinhan").openAccount();
-    Account* Account1 = bankmap.at("Kakao").openAccount();
+    Account* Account1 = bankmap.at("Kakao")->openAccount();
+    Account* Account1 = bankmap.at("Shinhan")->openAccount();
+    Account* Account1 = bankmap.at("Kakao")->openAccount();
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
     ATM* ATM2 = new ATM("Shinhan", "222222", false, false, 0);
@@ -771,3 +771,4 @@ void main() {
     //Test Case : Action3
 
 }
+
