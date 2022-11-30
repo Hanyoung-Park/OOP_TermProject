@@ -179,7 +179,7 @@ protected:
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
-    void readCardInfo(Account* userAccount);
+    void readCardInfo(string accNum);
     void showInfo(string val);
     int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
@@ -190,7 +190,7 @@ public:
     void transfer(); //6번
     void showHistory(); //7번
     
-    int execute(Account* account, bool isUnilingual);
+    int execute(bool isUnilingual);
     int adminMenu();
 };
 
@@ -202,7 +202,7 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
-void ATM::readCardInfo(Account* userAccount) {
+void ATM::readCardInfo(string accNum) {
     isPrimaryBank = (primaryBankName==userAccount->getBank()->getBankName());
     isAdmin = userAccount->admin();
     usingAccount = userAccount;
@@ -243,6 +243,12 @@ int ATM::startSession() {
     } else {
         cout << "반갑습니다.\n시작하려면 카드를 기기에 넣어주십시오." << endl;
     }
+
+    string accNum;
+    cout << "Insert your card" << endl;
+    cin >> accNum;
+    readCardInfo(accNum);
+
     if(isSingleBank==true && isPrimaryBank==false) {
         if(isEnglish==true) {
             cout << "The Card is invalid" << endl;
@@ -753,12 +759,11 @@ int ATM::adminMenu() {
     }
 }
 
-int ATM::execute(Account* account, bool isUnilingual) {
+int ATM::execute(bool isUnilingual) {
     int work;
     
     selectLanguage(isUnilingual);
     startSession();
-    readCardInfo(account);
 
     if(isAdmin) {
         adminMenu();
