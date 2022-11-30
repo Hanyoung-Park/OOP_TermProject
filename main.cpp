@@ -755,7 +755,7 @@ void ATM::transfer() {
 }
 
 void ATM::endSession() {
-    usingAccount = NULL;
+    usingAccount = nullptr;
 }
 
 int ATM::adminMenu() {
