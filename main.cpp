@@ -73,6 +73,7 @@ string Account::getPassword()
 
 Account &Account::operator+=(int amount)
 {
+    cout << "operator overloader" << endl;
     availableFund += amount;
     return *this;
 }
@@ -366,7 +367,7 @@ void ATM::deposit() {
             endSession();
             return;
         }
-        usingAccount += depositMoney;
+        *usingAccount += depositMoney;
         cout << "Your deposit has been succesful." << endl;
         cout << "HERE" << endl;
         cout << "Changed balance is " << usingAccount->getFund() << endl;
@@ -415,16 +416,16 @@ void ATM::deposit() {
             endSession();
             return;
         }
-        usingAccount += depositMoney;
+        *usingAccount += depositMoney;
         cout << "입금이 성공적으로 완료되었습니다." << endl;
     }
     if(isCheck==false) {
         amountOfCashes += depositMoney;
     }
     if(isPrimaryBank==false) {
-        usingAccount -= fee[0];
+        *usingAccount -= fee[0];
     } else {
-        usingAccount -= fee[1];
+        *usingAccount -= fee[1];
     }
     TransactionID += 1;
     message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
@@ -495,8 +496,10 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            usingAccount -= includingFee;
+            *usingAccount -= includingFee;
             cout << "Your withdrawal has been successful." << endl;
+            cout << "HERE" << endl;
+            cout << "Changed balance is " << usingAccount->getFund() << endl;
 
         } else {
             if(cnt!=0) {
@@ -540,7 +543,7 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             } 
-            usingAccount -= includingFee;
+            *usingAccount -= includingFee;
             cout << "출금이 성공적으로 완료되었습니다." << endl;
         }
     
@@ -744,8 +747,8 @@ void ATM::transfer() {
         }
         
     }
-    if(isCashTf==false) usingAccount -= (transferMoney+transferFee);
-    transferAccount += transferMoney;
+    if(isCashTf==false) *usingAccount -= (transferMoney+transferFee);
+    *transferAccount += transferMoney;
     TransactionID += 1;
     if(isCashTf==false) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
@@ -853,9 +856,13 @@ int main() {
     bankmap.insert(pair<string, Bank*>("Kakao", &Kakao));
     bankmap.insert(pair<string, Bank*>("Daegu", &Daegu));
 
-    Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "111-111-111111", "cooldavid", 5000, false);
-    Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
-    Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
+    // Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "111-111-111111", "cooldavid", 5000, false);
+    // Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
+    // Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
+
+    Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 5000, false);
+    Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 5000, false);
+    Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 5000, false);
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
