@@ -179,7 +179,7 @@ protected:
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
-    void readCardInfo(string accNum);
+    void readCardInfo(Account* userAccount);
     void showInfo(string val);
     int startSession();
     void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
@@ -190,7 +190,7 @@ public:
     void transfer(); //6번
     void showHistory(); //7번
     
-    int execute(bool isUnilingual);
+    int execute(Account* account, bool isUnilingual);
     int adminMenu();
 };
 
@@ -202,7 +202,7 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
-void ATM::readCardInfo(string accNum) {
+void ATM::readCardInfo(Account* userAccount) {
     isPrimaryBank = (primaryBankName==userAccount->getBank()->getBankName());
     isAdmin = userAccount->admin();
     usingAccount = userAccount;
@@ -243,12 +243,6 @@ int ATM::startSession() {
     } else {
         cout << "반갑습니다.\n시작하려면 카드를 기기에 넣어주십시오." << endl;
     }
-
-    string accNum;
-    cout << "Insert your card" << endl;
-    cin >> accNum;
-    readCardInfo(accNum);
-
     if(isSingleBank==true && isPrimaryBank==false) {
         if(isEnglish==true) {
             cout << "The Card is invalid" << endl;
@@ -334,7 +328,7 @@ void ATM::deposit() {
             cin >> depositMoney;
         }
         cout << "If you want to cancel, please type [C]" << endl;
-        string temp;
+        char temp;
         cin >> temp;
         if(temp=='C' || temp=='c') {
             cout << "Canceled" << endl;
@@ -380,7 +374,7 @@ void ATM::deposit() {
             cin >> depositMoney;
         }
         cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
-        string temp;
+        char temp;
         cin >> temp;
         if(temp=='C' || temp=='c') {
             cout << "거래가 취소되었습니다." << endl;
@@ -459,7 +453,7 @@ void ATM::withdrawal() {
                 return;
             }
             cout << "If you want to cancel, please type [C]" << endl;
-            string temp;
+            char temp;
             cin >> temp;
             if(temp=='C' || temp=='c') {
                 cout << "Canceled" << endl;
@@ -503,7 +497,7 @@ void ATM::withdrawal() {
                 return;
             }
             cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
-            string temp;
+            char temp;
             cin >> temp;
             if(temp=='C' || temp=='c') {
                 cout << "거래가 취소되었습니다." << endl;
@@ -536,14 +530,18 @@ void ATM::transfer() {
     map<string, Account*> account_info;
     string message;
     int moneyArr[4];
-    bool isCashTf;
+    int isCashTf;
     int transferMoney;
     int transferFee;
     if(isEnglish==true) {
         cout << "Please choose between Account Transfer or Cash Transfer" << endl;
-        cout << "Account Transfer: 0, Cash Transfer: 1" << endl;
+        cout << "Account Transfer: 0, Cash Transfer: 1, Cancel: 2" << endl;
         cin >> isCashTf;
-        
+        if(isCashTf==2) {
+            cout << "Canceled" << endl;
+            endSession();
+            return;
+        }
         
 
         while(1) {
@@ -584,7 +582,7 @@ void ATM::transfer() {
             }
         }
        
-        if(isCashTf) {
+        if(isCashTf==1) {
             cout << "Please enter the number of 50,000 won notes to be deposited." << endl;
             cin >> moneyArr[0];
             cout << "Please enter the number of 10,000 won notes to be deposited." << endl;
@@ -625,9 +623,13 @@ void ATM::transfer() {
         
     } else {
         cout << "계좌 송금을 할 지, 현금 송금을 할지 선택해주세요." << endl;
-        cout << "계좌 송금: 0, 현금 송금: 1" << endl;
+        cout << "계좌 송금: 0, 현금 송금: 1, 취소: 2" << endl;
         cin >> isCashTf;
-        
+        if(isCashTf==2) {
+            cout << "Canceled" << endl;
+            endSession();
+            return;
+        }
         
 
         while(1) {
@@ -751,11 +753,12 @@ int ATM::adminMenu() {
     }
 }
 
-int ATM::execute(bool isUnilingual) {
+int ATM::execute(Account* account, bool isUnilingual) {
     int work;
     
     selectLanguage(isUnilingual);
     startSession();
+    readCardInfo(account);
 
     if(isAdmin) {
         adminMenu();
