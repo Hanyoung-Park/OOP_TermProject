@@ -501,10 +501,17 @@ void ATM::transfer() {
     Account* transferAccount;
     map<string, Account*> account_info;
     string message;
-
+    int moneyArr[4];
+    bool isCashTf;
     int transferMoney;
     int transferFee;
     if(isEnglish==true) {
+        cout << "Please choose between Account Transfer or Cash Transfer" << endl;
+        cout << "Account Transfer: 0, Cash Transfer: 1" << endl;
+        cin >> isCashTf;
+        
+        
+
         while(1) {
             int cnt = 0;
             string transferBankName;
@@ -523,6 +530,8 @@ void ATM::transfer() {
                 return;
             }
         }
+
+        
         while(1) {
             int cnt = 0;
             cout << "Please enter the number of the account you want to transfer money to." << endl;
@@ -540,24 +549,53 @@ void ATM::transfer() {
                 return;
             }
         }
-
-        // Transfer Case 판별
-        if(isPrimaryBank && transferBankName==primaryBankName) {
-            transferFee = 2000;
-        } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
-            transferFee = 3000;
+       
+        if(isCashTf) {
+            cout << "Please enter the number of 50,000 won notes to be deposited." << endl;
+            cin >> moneyArr[0];
+            cout << "Please enter the number of 10,000 won notes to be deposited." << endl;
+            cin >> moneyArr[1];
+            cout << "Please enter the number of 5,000 won notes to be deposited." << endl;
+            cin >> moneyArr[2];
+            cout << "Please enter the number of 1,000 won notes to be deposited." << endl;
+            cin >> moneyArr[3];
+            if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
+                cout << "Too many banknotes" << endl;
+                endSession();
+                return;
+            }
+            transferMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
+            if(transferBankName == primaryBankName) transferFee = 2000;
+            else transferFee = 3000;
+            cout << "Please insert "<< transferMoney+transferFee << ". (including transfer fee)" << endl;
+            
         } else {
-            transferFee = 4000;
+            cout << "Please enter the amount of money to transfer." << endl;
+            cin >> transferMoney;
+            // Transfer Case 판별
+            if(isPrimaryBank && transferBankName==primaryBankName) {
+                transferFee = 2000;
+            } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
+                transferFee = 3000;
+            } else {
+                transferFee = 4000;
+            }
+            if(transferMoney+transferFee>usingAccount->getFund()) {
+                cout << "Sorry, there are not enough funds in the account." << endl;
+                endSession();
+                return;
+            }
         }
-        cout << "Please enter the amount of money to transfer." << endl;
-        cin >> transferMoney;
-        if(transferMoney+transferFee>usingAccount->getFund()) {
-            cout << "Sorry, there are not enough funds in the account." << endl;
-            endSession();
-            return;
-        }
+
+        
         
     } else {
+        cout << "계좌 송금을 할 지, 현금 송금을 할지 선택해주세요." << endl;
+        cout << "계좌 송금: 0, 현금 송금: 1" << endl;
+        cin >> isCashTf;
+        
+        
+
         while(1) {
             int cnt = 0;
             string transferBankName;
@@ -567,7 +605,7 @@ void ATM::transfer() {
                 transferBank = &bankmap[transferBankName];
                 account_info = transferBank->getAccountMap();
             } else {
-                cout << "정확한 은행의 이름을 입력해주세요." << endl;
+                cout << "정확한 은행명을 입력해주세요." << endl;
                 cnt += 1;
             }
             if(cnt==3) {
@@ -576,6 +614,8 @@ void ATM::transfer() {
                 return;
             }
         }
+
+        
         while(1) {
             int cnt = 0;
             cout << "송금할 계좌번호를 입력해주세요." << endl;
@@ -593,27 +633,50 @@ void ATM::transfer() {
                 return;
             }
         }
-
-        // Transfer Case 판별
-        if(isPrimaryBank && transferBankName==primaryBankName) {
-            transferFee = 2000;
-        } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
-            transferFee = 3000;
+       
+        if(isCashTf) {
+            cout << "입금할 5만원권 장수를 입력해주세요." << endl;
+            cin >> moneyArr[0];
+            cout << "입금할 만원권 장수를 입력해주세요." << endl;
+            cin >> moneyArr[1];
+            cout << "입금할 5천원권 장수를 입력해주세요." << endl;
+            cin >> moneyArr[2];
+            cout << "입금할 천원권 장수를 입력해주세요." << endl;
+            cin >> moneyArr[3];
+            if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
+                cout << "지폐가 너무 많습니다." << endl;
+                endSession();
+                return;
+            }
+            transferMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
+            if(transferBankName == primaryBankName) transferFee = 2000;
+            else transferFee = 3000;
+            cout << "총액 "<< transferMoney+transferFee << "을 기기에 넣어주세요. (송금 수수료 포함)" << endl;
+            
         } else {
-            transferFee = 4000;
+            cout << "송금할 금액을 입력해주세요." << endl;
+            cin >> transferMoney;
+            // Transfer Case 판별
+            if(isPrimaryBank && transferBankName==primaryBankName) {
+                transferFee = 2000;
+            } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
+                transferFee = 3000;
+            } else {
+                transferFee = 4000;
+            }
+            if(transferMoney+transferFee>usingAccount->getFund()) {
+                cout << "죄송합니다만 계좌에 충분한 금액이 들어있지 않습니다." << endl;
+                endSession();
+                return;
+            }
         }
-        cout << "송금할 금액을 입력해주세요." << endl;
-        cin >> transferMoney;
-        if(transferMoney+transferFee>usingAccount->getFund()) {
-            cout << "죄송합니다만 계좌에 충분한 금액이 들어있지 않습니다." << endl;
-            endSession();
-            return;
-        }
+        
     }
-    usingAccount -= (transferMoney+transferFee);
+    if(isCashTf==false) usingAccount -= (transferMoney+transferFee);
     transferAccount += transferMoney;
     TransactionID += 1;
-    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    if(isCashTf==false) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     history += message;
 
     ofstream writeFile(filePath.data());
