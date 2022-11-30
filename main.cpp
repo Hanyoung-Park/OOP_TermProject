@@ -14,23 +14,6 @@ int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
 // int fee[7];
 map<string, Bank*> bankmap;
 
-void init_fee() {
-    cout << "Please type the deposit fee for non-primary banks" << endl;
-    cin >> fee[0];
-    cout << "Please type the deposit fee for primary banks" << endl;
-    cin >> fee[1];
-    cout << "Please type the withdrawal fee for non-primary banks" << endl;
-    cin >> fee[2];
-    cout << "Please type the withdrawal fee for non-primary banks" << endl;
-    cin >> fee[3];
-    cout << "Please type the transfer fee between primary banks" << endl;
-    cin >> fee[4];
-    cout << "Please type the transfer fee between primary and non-primary banks" << endl;
-    cin >> fee[5];
-    cout << "Please type the transfer fee between non-primary banks" << endl;
-    cin >> fee[6];
-}
-
 
 //-----------------------------------------------------------------------------
 
@@ -367,10 +350,11 @@ void ATM::deposit() {
             cout << "Please enter the amount of fund to deposit." << endl;
             cin >> depositMoney;
         }
-        cout << "If you want to cancel, please type [C]" << endl;
+        cout << "If you want to cancel, please type [Y]" << endl;
+        cout << "If you don't want to cancel, please type [N]" << endl;
         char temp;
         cin >> temp;
-        if(temp=='C' || temp=='c') {
+        if(temp=='Y' || temp=='y') {
             cout << "Canceled" << endl;
             endSession();
             return;
@@ -413,10 +397,11 @@ void ATM::deposit() {
             cout << "입금할 금액을 입력해주세요." << endl;
             cin >> depositMoney;
         }
-        cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
+        cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
+        cout << "거래 진행을 원하신다면 [N]를 입력해주세요." << endl;
         char temp;
         cin >> temp;
-        if(temp=='C' || temp=='c') {
+        if(temp=='Y' || temp=='y') {
             cout << "거래가 취소되었습니다." << endl;
             endSession();
             return;
@@ -492,10 +477,11 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            cout << "If you want to cancel, please type [C]" << endl;
+            cout << "If you want to cancel, please type [Y]" << endl;
+            cout << "If you don't want to cancel, please type [N]" << endl;
             char temp;
             cin >> temp;
-            if(temp=='C' || temp=='c') {
+            if(temp=='Y' || temp=='y') {
                 cout << "Canceled" << endl;
                 endSession();
                 return;
@@ -536,10 +522,11 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            cout << "취소를 원하신다면 [C]를 입력해주세요." << endl;
+            cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
+            cout << "거래 진행을 원하신다면 [N]를 입력해주세요." << endl;
             char temp;
             cin >> temp;
-            if(temp=='C' || temp=='c') {
+            if(temp=='Y' || temp=='y') {
                 cout << "거래가 취소되었습니다." << endl;
                 endSession();
                 return;
@@ -830,7 +817,22 @@ int ATM::execute() {
 }
 //----------------------------------------
 
-
+void init_fee() {
+    cout << "Please type the deposit fee for non-primary banks" << endl;
+    cin >> fee[0];
+    cout << "Please type the deposit fee for primary banks" << endl;
+    cin >> fee[1];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[2];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[3];
+    cout << "Please type the transfer fee between primary banks" << endl;
+    cin >> fee[4];
+    cout << "Please type the transfer fee between primary and non-primary banks" << endl;
+    cin >> fee[5];
+    cout << "Please type the transfer fee between non-primary banks" << endl;
+    cin >> fee[6];
+}
 
 int main() {
 
