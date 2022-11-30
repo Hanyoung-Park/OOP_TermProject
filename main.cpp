@@ -454,43 +454,101 @@ void ATM::withdrawal() {
     int withdrawalMoney;
     int includingFee;
     string message;
+    int cnt = 0;
+    string keepGoing;
+
     if(isPrimaryBank) {
         includingFee = 1000;
     } else {
         includingFee = 2000;
     }
-    if(isEnglish==true) {
-        cout << "Please enter the amount of fund to withdraw." << endl;
-        cin >> withdrawalMoney;
-        includingFee += withdrawalMoney;
-        if(amountOfCashes<includingFee) {
-            cout << "Sorry, This ATM does not have enough money in it. " << endl;
-            endSession();
-            return;
-        }
-        usingAccount -= includingFee;
-        cout << "Your withdrawal has been successful." << endl;
 
-    } else {
-        cout << "출금할 금액을 입력해주세요." << endl;
-        cin >> withdrawalMoney;
-        includingFee += withdrawalMoney;
-        if(amountOfCashes<includingFee) {
-            cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
-            endSession();
-            return;
-        } 
-        usingAccount -= includingFee;
-        cout << "출금이 성공적으로 완료되었습니다." << endl;
-    }
-    amountOfCashes -= withdrawalMoney;   
-    TransactionID += 1;
-    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
-    history += message;
-    ofstream writeFile(filePath.data());
-    if (writeFile.is_open()){
-        writeFile << message;
-        writeFile.close();
+    while(1) {
+        if(isEnglish==true) {
+            if(cnt!=0) {
+                cout << "If you want further action, please enter [Yes]" << endl;
+                cin >> keepGoing;
+                if(keepGoing!="Yes" && keepGoing!="yes") {
+                    cout << "Session ended" << endl;
+                    endSession();
+                    return;
+                }
+            }
+            if(cnt==3) {
+                cout << "You cannot withdraw more than 3 times at once" << endl;
+                endSession();
+                return;
+            }
+
+            cout << "Please enter the amount of fund to withdraw." << endl;
+            cin >> withdrawalMoney;
+            while(withdrawalMoney%1000!=0){
+                cout << "You can use only banknotes" << endl;
+                cout << "Please enter the amount of fund to withdraw." << endl;
+                cin >> withdrawalMoney;
+            }
+            if(withdrawalMoney>500000) {
+                cout << "Withdrawal limit exceeded" << endl;
+                endSession();
+                return;
+            }
+            includingFee += withdrawalMoney;
+            if(amountOfCashes<includingFee) {
+                cout << "Sorry, This ATM does not have enough money in it. " << endl;
+                endSession();
+                return;
+            }
+            usingAccount -= includingFee;
+            cout << "Your withdrawal has been successful." << endl;
+
+        } else {
+            if(cnt!=0) {
+                cout << "추가 작업을 원한다면 [Yes]를 입력해주세요." << endl;
+                cin >> keepGoing;
+                if(keepGoing!="Yes" && keepGoing!="yes") {
+                    cout << "세션 종료됨" << endl;
+                    endSession();
+                    return;
+                }
+            }
+            if(cnt==3) {
+                cout << "3번까지만 출금할 수 있습니다." << endl;
+                endSession();
+                return;
+            }
+            cout << "출금할 금액을 입력해주세요." << endl;
+            cin >> withdrawalMoney;
+            while(withdrawalMoney%1000!=0){
+                cout << "지폐만 사용할 수 있습니다." << endl;
+                cout << "출금할 금액을 입력해주세요." << endl;
+                cin >> withdrawalMoney;
+            }
+            if(withdrawalMoney>500000) {
+                cout << "출금한도 초과" << endl;
+                endSession();
+                return;
+            }
+            includingFee += withdrawalMoney;
+            if(amountOfCashes<includingFee) {
+                cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
+                endSession();
+                return;
+            } 
+            usingAccount -= includingFee;
+            cout << "출금이 성공적으로 완료되었습니다." << endl;
+        }
+    
+        amountOfCashes -= withdrawalMoney;   
+        TransactionID += 1;
+        message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+        history += message;
+        ofstream writeFile(filePath.data());
+        if (writeFile.is_open()){
+            writeFile << message;
+            writeFile.close();
+        }
+        cnt += 1;
+    
     }
 }
 
