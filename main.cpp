@@ -165,7 +165,7 @@ string Bank::getBankName() {
 
 normalAccount* Bank::returnAccount(string accountNumber, bool English) {
     string inputpassword;
-    if (English = 'true')
+    if (English == 'true')
         cout << "Password?" << endl;
     else    
         cout << "비밀번호를 입력하여 주십시오" << endl;
@@ -360,7 +360,7 @@ int ATM::startSession() {
     if(errorCheck==1) return 1;
     int i = 0;
     while(i < 3){
-        normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
+        normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum(), isEnglish);
         if (acc == nullptr){
             if (isEnglish) 
                 cout << "Wrong password, Please enter your password again" << endl;
@@ -995,7 +995,7 @@ int main() {
     normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
     normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
     Admin* admin_account = new Admin(&Kakao, "Kate", "4");
-    bankmap.at("Kakao")->admin_account;
+    // bankmap.at("Kakao")->admin_account;
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
