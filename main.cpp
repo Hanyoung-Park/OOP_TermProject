@@ -1006,6 +1006,7 @@ int printAccountBalance(Account** accarr) {
     try {
         while(1) {
             cout << "[Account " << i+1 << "] Balance: " << accarr[i]->getFund() << endl; 
+            i+=1;
         }
         return 0;
     } catch (const out_of_range& e) {
@@ -1018,6 +1019,7 @@ int printATMCash(ATM** atmarr) {
     try {
         while(1) {
             cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
+            i+=1;
         }
         return 0;
     } catch (const out_of_range& e) {
