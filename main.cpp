@@ -573,8 +573,7 @@ void ATM::withdrawal() {
     int withdrawalMoney;
     int withdrawalFee;
     string message;
-    
-    string keepGoing;
+
 
     if(isPrimaryBank) {
         withdrawalFee = fee[2];
@@ -584,15 +583,6 @@ void ATM::withdrawal() {
 
 
     if(isEnglish==true) {
-        if(withdrawalCnt!=0) {
-            cout << "If you want further action, please enter [Yes]" << endl;
-            cin >> keepGoing;
-            if(keepGoing!="Yes" && keepGoing!="yes") {
-                cout << "Session ended" << endl;
-                endSession();
-                return;
-            }
-        }
         if(withdrawalCnt==3) {
             cout << "You cannot withdraw more than 3 times at once" << endl;
             endSession();
@@ -631,15 +621,6 @@ void ATM::withdrawal() {
         cout << "Changed balance is " << usingAccount->getFund() << endl;
 
     } else {
-        if(withdrawalCnt!=0) {
-            cout << "추가 작업을 원한다면 [Yes]를 입력해주세요." << endl;
-            cin >> keepGoing;
-            if(keepGoing!="Yes" && keepGoing!="yes") {
-                cout << "세션 종료됨" << endl;
-                endSession();
-                return;
-            }
-        }
         if(withdrawalCnt==3) {
             cout << "3번까지만 출금할 수 있습니다." << endl;
             endSession();
@@ -908,6 +889,7 @@ void ATM::transfer() {
 
 void ATM::endSession() {
     usingAccount = nullptr;
+    withdrawalCnt = 0;
     if(isEnglish)
         cout << "END SESSION" << endl;
     else
@@ -1137,18 +1119,18 @@ int main() {
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
     //Test Case : Action1
-    // ATM1->execute();
-    // printAccountBalance(accountArray, numOfAccount);
-    // printATMCash(atmArray, numOfATM);
+    ATM1->execute();
+    printAccountBalance(accountArray, numOfAccount);
+    printATMCash(atmArray, numOfATM);
     //Test Case : Action2
     ATM2->execute();
     printAccountBalance(accountArray, numOfAccount);
     printATMCash(atmArray, numOfATM);
 
     //Test Case : Action3
-    // ATM3->execute();
-    // printAccountBalance(accountArray, numOfAccount);
-    // printATMCash(atmArray, numOfATM);
+    ATM3->execute();
+    printAccountBalance(accountArray, numOfAccount);
+    printATMCash(atmArray, numOfATM);
 
     return 0;
 }
