@@ -300,23 +300,20 @@ void ATM::readCardInfo(string accNum) {
             }
         }
         if (!valid) {
-            cout << it->first <<"에 존재하지 않음."<<endl;
             map<string, Admin*> adminTempmap;
             adminTempmap = it->second->getAdminMap();
             map<string, Admin*>::iterator it3;
             for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it2++) {
                 cout << "admin map" << it3->second->getNum() << endl;
                 if(it3->second->getNum() == accNum) {
-                    cout << "admin에 존재" << endl;
                     isAdmin = true;
-                    valid = 1;
+                    valid = 2;
+                    break;
                 }
             }
 
         }
-        
     }
-
 
     if (valid == 0){
         if(isEnglish)
@@ -326,11 +323,18 @@ void ATM::readCardInfo(string accNum) {
 
         errorCheck = 1;
     }
+    else if (valid == 2){
+        // isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
+        return;
+    }
+
     try {
         if (valid == 0) {
             throw n;
         }
+        else{
         isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
+        }
     }
     catch (int ex) {
         this->endSession();
@@ -385,7 +389,6 @@ int ATM::startSession() {
     string accNum;
     cin >> accNum;
     readCardInfo(accNum);
-
     if(isSingleBank==true && isPrimaryBank==false) {
         if(isEnglish==true) {
             cout << "The Card is invalid" << endl;
@@ -396,6 +399,11 @@ int ATM::startSession() {
         return 1;
     }
     if(errorCheck==1) return 1;
+    
+    if(isAdmin){
+        return 0;
+    }
+
     int i = 0;
     while(i < 3){
         normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum(), isEnglish);
@@ -974,8 +982,7 @@ int ATM::execute() {
     catch (int n) {
         return 0;
     }
-
-    if(isAdmin) {
+     if(isAdmin) {
         adminMenu();
         return 0;
     } else {
