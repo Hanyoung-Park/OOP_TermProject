@@ -304,7 +304,6 @@ void ATM::readCardInfo(string accNum) {
             adminTempmap = it->second->getAdminMap();
             map<string, Admin*>::iterator it3;
             for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it2++) {
-                cout << "admin map" << it3->second->getNum() << endl;
                 if(it3->second->getNum() == accNum) {
                     isAdmin = true;
                     valid = 2;
@@ -1077,9 +1076,9 @@ int main() {
     normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
     Admin* admin_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Kate", "4");    // bankmap.at("Kakao")->admin_account;
 
-    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
-    ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
-    ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
+    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
+    ATM* ATM2 = new ATM("Daegu", "222222", false, false, 50000);
+    ATM* ATM3 = new ATM("Daegu", "333333", false, false, 50000);
 
     //making array for print information
     const int numOfATM = 3;
