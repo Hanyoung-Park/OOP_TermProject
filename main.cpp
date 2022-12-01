@@ -148,6 +148,7 @@ public:
     string getBankName();
     map<string, normalAccount*> getAccountMap();
     normalAccount* initAccount(string bank, string user, string acc, string pass, int fund);
+    Admin* initAdminAcc(Bank* bank, string name, string acc);
 
 };
 
@@ -207,6 +208,10 @@ normalAccount* Bank::initAccount(string bank, string user, string acc, string pa
     newAccount = new normalAccount(this, user, acc, fund, pass); //Account class에 password 추가
     account_info.insert(pair<string, normalAccount*>(acc, newAccount));
     return newAccount;
+}
+
+Admin* Bank::initAdminAcc(Bank* bank, string name, string acc){
+    
 }
 
 //------------------------------------------------------------------------------------------------
@@ -953,7 +958,8 @@ int main() {
     normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
     normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
     normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
-    Admin* Account4 = new Admin(&Kakao, "Kate", "4");
+    Admin* admin_account = new Admin(&Kakao, "Kate", "4");
+    bankmap.at("Kakao")->admin_account;
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
