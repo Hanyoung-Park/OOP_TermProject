@@ -253,6 +253,7 @@ protected:
     normalAccount* usingAccount;
     string filePath = serial+"history.txt";
     int errorCheck=0; // Error checker
+    int withdrawalCnt=0;
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
@@ -572,7 +573,7 @@ void ATM::withdrawal() {
     int withdrawalMoney;
     int withdrawalFee;
     string message;
-    int cnt = 0;
+    
     string keepGoing;
 
     if(isPrimaryBank) {
@@ -581,116 +582,116 @@ void ATM::withdrawal() {
         withdrawalFee = fee[3];
     }
 
-    while(1) {
-        if(isEnglish==true) {
-            if(cnt!=0) {
-                cout << "If you want further action, please enter [Yes]" << endl;
-                cin >> keepGoing;
-                if(keepGoing!="Yes" && keepGoing!="yes") {
-                    cout << "Session ended" << endl;
-                    endSession();
-                    return;
-                }
-            }
-            if(cnt==3) {
-                cout << "You cannot withdraw more than 3 times at once" << endl;
+
+    if(isEnglish==true) {
+        if(withdrawalCnt!=0) {
+            cout << "If you want further action, please enter [Yes]" << endl;
+            cin >> keepGoing;
+            if(keepGoing!="Yes" && keepGoing!="yes") {
+                cout << "Session ended" << endl;
                 endSession();
                 return;
             }
+        }
+        if(withdrawalCnt==3) {
+            cout << "You cannot withdraw more than 3 times at once" << endl;
+            endSession();
+            return;
+        }
 
+        cout << "Please enter the amount of fund to withdraw." << endl;
+        cin >> withdrawalMoney;
+        while(withdrawalMoney%1000!=0){
+            cout << "You can use only banknotes" << endl;
             cout << "Please enter the amount of fund to withdraw." << endl;
             cin >> withdrawalMoney;
-            while(withdrawalMoney%1000!=0){
-                cout << "You can use only banknotes" << endl;
-                cout << "Please enter the amount of fund to withdraw." << endl;
-                cin >> withdrawalMoney;
-            }
-            if(withdrawalMoney>500000) {
-                cout << "Withdrawal limit exceeded" << endl;
-                endSession();
-                return;
-            }
-            if(amountOfCashes<withdrawalFee+withdrawalMoney) {
-                cout << "Sorry, This ATM does not have enough money in it. " << endl;
-                endSession();
-                return;
-            }
-            cout << "If you want to cancel, please type [Y]" << endl;
-            cout << "If you don't want to cancel, please type [N]" << endl;
-            char temp;
-            cin >> temp;
-            if(temp=='Y' || temp=='y') {
-                cout << "Canceled" << endl;
-                endSession();
-                return;
-            }
-            *usingAccount -= withdrawalFee+withdrawalMoney;
-            cout << "Your withdrawal has been successful." << endl;
-            cout << "HERE" << endl;
-            cout << "Changed balance is " << usingAccount->getFund() << endl;
+        }
+        if(withdrawalMoney>500000) {
+            cout << "Withdrawal limit exceeded" << endl;
+            endSession();
+            return;
+        }
+        if(amountOfCashes<withdrawalFee+withdrawalMoney) {
+            cout << "Sorry, This ATM does not have enough money in it. " << endl;
+            endSession();
+            return;
+        }
+        cout << "If you want to cancel, please type [Y]" << endl;
+        cout << "If you don't want to cancel, please type [N]" << endl;
+        char temp;
+        cin >> temp;
+        if(temp=='Y' || temp=='y') {
+            cout << "Canceled" << endl;
+            endSession();
+            return;
+        }
+        *usingAccount -= withdrawalFee+withdrawalMoney;
+        cout << "Your withdrawal has been successful." << endl;
+        cout << "HERE" << endl;
+        cout << "Changed balance is " << usingAccount->getFund() << endl;
 
-        } else {
-            if(cnt!=0) {
-                cout << "추가 작업을 원한다면 [Yes]를 입력해주세요." << endl;
-                cin >> keepGoing;
-                if(keepGoing!="Yes" && keepGoing!="yes") {
-                    cout << "세션 종료됨" << endl;
-                    endSession();
-                    return;
-                }
-            }
-            if(cnt==3) {
-                cout << "3번까지만 출금할 수 있습니다." << endl;
+    } else {
+        if(withdrawalCnt!=0) {
+            cout << "추가 작업을 원한다면 [Yes]를 입력해주세요." << endl;
+            cin >> keepGoing;
+            if(keepGoing!="Yes" && keepGoing!="yes") {
+                cout << "세션 종료됨" << endl;
                 endSession();
                 return;
             }
+        }
+        if(withdrawalCnt==3) {
+            cout << "3번까지만 출금할 수 있습니다." << endl;
+            endSession();
+            return;
+        }
+        cout << "출금할 금액을 입력해주세요." << endl;
+        cin >> withdrawalMoney;
+        while(withdrawalMoney%1000!=0){
+            cout << "지폐만 사용할 수 있습니다." << endl;
             cout << "출금할 금액을 입력해주세요." << endl;
             cin >> withdrawalMoney;
-            while(withdrawalMoney%1000!=0){
-                cout << "지폐만 사용할 수 있습니다." << endl;
-                cout << "출금할 금액을 입력해주세요." << endl;
-                cin >> withdrawalMoney;
-            }
-            if(withdrawalMoney>500000) {
-                cout << "출금한도 초과" << endl;
-                endSession();
-                return;
-            }
-            if(amountOfCashes<withdrawalFee+withdrawalMoney) {
-                cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
-                endSession();
-                return;
-            }
-            cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
-            cout << "거래 진행을 원하신다면 [N]를 입력해주세요." << endl;
-            char temp;
-            cin >> temp;
-            if(temp=='Y' || temp=='y') {
-                cout << "거래가 취소되었습니다." << endl;
-                endSession();
-                return;
-            } 
-            *usingAccount -= withdrawalFee+withdrawalMoney;
-            cout << "출금이 성공적으로 완료되었습니다." << endl;
         }
-    
-        amountOfCashes -= withdrawalMoney;   
-        TransactionID += 1;
-        message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
-        history += message;
-        if(isEnglish==true){
-        cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
-        }else{
-        cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
-    }
-        ofstream writeFile(filePath.data());
-        if (writeFile.is_open()){
-            writeFile << message;
-            writeFile.close();
+        if(withdrawalMoney>500000) {
+            cout << "출금한도 초과" << endl;
+            endSession();
+            return;
         }
-        cnt += 1;
-    
+        if(amountOfCashes<withdrawalFee+withdrawalMoney) {
+            cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
+            endSession();
+            return;
+        }
+        cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
+        cout << "거래 진행을 원하신다면 [N]를 입력해주세요." << endl;
+        char temp;
+        cin >> temp;
+        if(temp=='Y' || temp=='y') {
+            cout << "거래가 취소되었습니다." << endl;
+            endSession();
+            return;
+        } 
+        *usingAccount -= withdrawalFee+withdrawalMoney;
+        cout << "출금이 성공적으로 완료되었습니다." << endl;
     }
+
+    amountOfCashes -= withdrawalMoney;   
+    TransactionID += 1;
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+    history += message;
+    if(isEnglish==true) {
+    cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+    } else {
+    cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+    }
+    ofstream writeFile(filePath.data());
+    if (writeFile.is_open()) {
+        writeFile << message;
+        writeFile.close();
+    }
+    withdrawalCnt += 1;
+    
+    
 }
 
 void ATM::transfer() {
@@ -917,75 +918,75 @@ int ATM::adminMenu() {
     int work;
     string isUnilingualYN;
     string isSingleBankYN;
+    while(1) {
+        if(isEnglish) {
+            cout << "Please select work what you want to do." << endl;
+            cout << "1: Information of ATM, 2: History, 3: Cancel" << endl;
+            cin >> work;
+            switch (work) {
+                case 1:
+                    showInfo("serial");
+                    showInfo("cash");
+                    cout << "Serial Number: " << serial << endl;
+                    
+                    if(isUnilingual) isUnilingualYN = "Y";
+                    else isUnilingualYN = "N";
+                    cout << "Unilingual: " << isUnilingualYN << endl;;
+                    
+                    if(isSingleBank) isSingleBankYN = "Y";
+                    else isSingleBankYN = "N";
+                    cout << "Single Bank: " << isSingleBankYN << endl;
 
-    if(isEnglish) {
-        cout << "Please select work what you want to do." << endl;
-        cout << "1: Information of ATM, 2: History, 3: Cancel" << endl;
-        cin >> work;
-        switch (work) {
-            case 1:
-                showInfo("serial");
-                showInfo("cash");
-                cout << "Serial Number: " << serial << endl;
-
-                
-                if(isUnilingual) isUnilingualYN = "Y";
-                else isUnilingualYN = "N";
-                cout << "Unilingual: " << isUnilingualYN << endl;;
-
-                
-                if(isSingleBank) isSingleBankYN = "Y";
-                else isSingleBankYN = "N";
-                cout << "Single Bank: " << isSingleBankYN << endl;
-
-                endSession();
-                return 0;
-            case 2:
-                showHistory();
-                endSession();
-                return 0;
-            case 3:
-                cout << "Canceled" << endl;
-                return 0;
-            default:
-                cout << "Wrong Approach" << endl;
-                return 0;
+                    // endSession();
+                    break;
+                case 2:
+                    showHistory();
+                    // endSession();
+                    break;
+                case 3:
+                    cout << "Canceled" << endl;
+                    break;
+                default:
+                    cout << "Wrong Approach" << endl;
+                    break;
+            }
         }
+        else {
+            cout << "원하는 작업을 골라주세요." << endl;
+            cout << "1: ATM 정보, 2: 기록, 3: 취소" << endl;
+            cin >> work;
+            switch (work) {
+                case 1:
+                    showInfo("serial");
+                    showInfo("cash");
+
+                    cout << "시리얼 넘버: " << serial << endl;
+                    
+                    if(isUnilingual) isUnilingualYN = "Y";
+                    else isUnilingualYN = "N";
+                    cout << "유니링구얼 여부: " << isUnilingualYN << endl;;
+                    
+                    if(isSingleBank) isSingleBankYN = "Y";
+                    else isSingleBankYN = "N";
+                    cout << "싱글뱅크 여부: " << isSingleBankYN << endl;
+
+                    endSession();
+                    break;
+                case 2:
+                    showHistory();
+                    endSession();
+                    break;
+                case 3:
+                    cout << "취소" << endl;
+                    break;
+                default:
+                    cout << "잘못된 접근입니다." << endl;
+                    break;
+            }
+
+        }        
     }
-    else {
-        cout << "원하는 작업을 골라주세요." << endl;
-        cout << "1: ATM 정보, 2: 기록, 3: 취소" << endl;
-        cin >> work;
-        switch (work) {
-            case 1:
-                showInfo("serial");
-                showInfo("cash");
-
-                cout << "시리얼 넘버: " << serial << endl;
-                
-                if(isUnilingual) isUnilingualYN = "Y";
-                else isUnilingualYN = "N";
-                cout << "유니링구얼 여부: " << isUnilingualYN << endl;;
-                
-                if(isSingleBank) isSingleBankYN = "Y";
-                else isSingleBankYN = "N";
-                cout << "싱글뱅크 여부: " << isSingleBankYN << endl;
-
-                endSession();
-                return 0;
-            case 2:
-                showHistory();
-                endSession();
-                return 0;
-            case 3:
-                cout << "취소" << endl;
-                return 0;
-            default:
-                cout << "잘못된 접근입니다." << endl;
-                return 0;
-        }
-
-    }
+    
 }
 
 int ATM::execute() {
@@ -1077,7 +1078,7 @@ int printATMCash(ATM** atmarr, int length) {
     return 0;
 }
 
-ATM* makeATM() {
+ATM makeATM() {
     string bankname, serial;
     bool SingleBank, Unilingual;
     int cashes;
@@ -1100,7 +1101,7 @@ ATM* makeATM() {
     cout << "Please enter the amount of cashes in this ATM" << endl;
     cin >> cashes;
 
-    return &ATM(bankname, serial, SingleBank, Unilingual, cashes);
+    return ATM(bankname, serial, SingleBank, Unilingual, cashes);
 }
 
 int main() {
