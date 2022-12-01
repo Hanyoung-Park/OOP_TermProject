@@ -45,7 +45,8 @@ protected:
     bool isAdmin;
 
 public:
-    Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
+    Account();
+    // Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
     virtual bool admin();
     int getFund();
     Bank* getBank();
@@ -53,15 +54,17 @@ public:
     string getPassword();
 };
 
-Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
-{
-    this->isAdmin = isAdmin;
-    this->bank = bank;
-    this->userName = userName;
-    this->accountNumber = accountNumber;
-    this->availableFund = availableFund;
-    this->password = password;
-    }
+// Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
+// {
+//     this->isAdmin = isAdmin;
+//     this->bank = bank;
+//     this->userName = userName;
+//     this->accountNumber = accountNumber;
+//     this->availableFund = availableFund;
+//     this->password = password;
+//     }
+
+Account::Account(){}
 
 int Account::getFund()
 {
@@ -83,12 +86,16 @@ string Account::getPassword()
     return password;
 }
 
+bool Account::admin(){
+    return isAdmin;
+}
+
 class normalAccount : public Account {
     public:
         normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
         Account &operator+=(int amount);
         Account &operator-=(int amount);
-        bool admin();
+        bool admin() override;
 };
 
 normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
@@ -122,7 +129,7 @@ bool normalAccount::admin() {
 class Admin : public Account {
     public:
         Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = true);
-        bool admin();
+        bool admin() override;
 };
 Admin::Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
     this->isAdmin = isAdmin;
@@ -935,9 +942,9 @@ int main() {
     // Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
     // Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
 
-    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 5000, false);
-    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 5000, false);
-    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 5000, false);
+    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000, false);
+    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000, false);
+    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000, false);
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
