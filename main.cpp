@@ -915,6 +915,8 @@ void ATM::endSession() {
 
 int ATM::adminMenu() {
     int work;
+    string isUnilingualYN;
+    string isSingleBankYN;
 
     if(isEnglish) {
         cout << "Please select work what you want to do." << endl;
@@ -924,6 +926,18 @@ int ATM::adminMenu() {
             case 1:
                 showInfo("serial");
                 showInfo("cash");
+                cout << "Serial Number: " << serial << endl;
+
+                
+                if(isUnilingual) isUnilingualYN = "Y";
+                else isUnilingualYN = "N";
+                cout << "Unilingual: " << isUnilingualYN << endl;;
+
+                
+                if(isSingleBank) isSingleBankYN = "Y";
+                else isSingleBankYN = "N";
+                cout << "Single Bank: " << isSingleBankYN << endl;
+
                 endSession();
                 return 0;
             case 2:
@@ -946,6 +960,17 @@ int ATM::adminMenu() {
             case 1:
                 showInfo("serial");
                 showInfo("cash");
+
+                cout << "시리얼 넘버: " << serial << endl;
+                
+                if(isUnilingual) isUnilingualYN = "Y";
+                else isUnilingualYN = "N";
+                cout << "유니링구얼 여부: " << isUnilingualYN << endl;;
+                
+                if(isSingleBank) isSingleBankYN = "Y";
+                else isSingleBankYN = "N";
+                cout << "싱글뱅크 여부: " << isSingleBankYN << endl;
+
                 endSession();
                 return 0;
             case 2:
