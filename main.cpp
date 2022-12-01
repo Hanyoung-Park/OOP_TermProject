@@ -54,16 +54,6 @@ public:
     string getPassword();
 };
 
-// Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
-// {
-//     this->isAdmin = isAdmin;
-//     this->bank = bank;
-//     this->userName = userName;
-//     this->accountNumber = accountNumber;
-//     this->availableFund = availableFund;
-//     this->password = password;
-//     }
-
 Account::Account(){}
 
 int Account::getFund()
@@ -92,14 +82,14 @@ bool Account::admin(){
 
 class normalAccount : public Account {
     public:
-        normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
+        normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password);
         Account &operator+=(int amount);
         Account &operator-=(int amount);
         bool admin() override;
 };
 
-normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
-    this->isAdmin = isAdmin;
+normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password) {
+    this->isAdmin = false;
     this->bank = bank;
     this->userName = userName;
     this->accountNumber = accountNumber;
@@ -124,20 +114,17 @@ bool normalAccount::admin() {
     return isAdmin;
 }
 
-
-
 class Admin : public Account {
     public:
-        Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = true);
+        Admin(Bank* bank, string userName, string accountNumber);
         bool admin() override;
 };
-Admin::Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
-    this->isAdmin = isAdmin;
+
+Admin::Admin(Bank* bank, string userName, string accountNumber) {
+    this->isAdmin = true;
     this->bank = bank;
     this->userName = userName;
     this->accountNumber = accountNumber;
-    this->availableFund = availableFund;
-    this->password = password;
 }
 
 bool Admin::admin() {
@@ -160,7 +147,7 @@ public:
     normalAccount* openAccount();
     string getBankName();
     map<string, normalAccount*> getAccountMap();
-    normalAccount* initAccount(string bank, string user, string acc, string pass, int fund, bool admin);
+    normalAccount* initAccount(string bank, string user, string acc, string pass, int fund);
 
 };
 
@@ -210,14 +197,14 @@ normalAccount* Bank::openAccount() {
     cin >> admin;
 
     normalAccount* newAccount;
-    newAccount = new normalAccount(this, userName, accountNum, fund, password, admin); //Account class에 password 추가
+    newAccount = new normalAccount(this, userName, accountNum, fund, password); //Account class에 password 추가
     account_info.insert(pair<string, normalAccount*>(accountNum, newAccount));
     return newAccount;
 }
 
-normalAccount* Bank::initAccount(string bank, string user, string acc, string pass, int fund, bool admin) {
+normalAccount* Bank::initAccount(string bank, string user, string acc, string pass, int fund) {
     normalAccount* newAccount;
-    newAccount = new normalAccount(this, user, acc, fund, pass, admin); //Account class에 password 추가
+    newAccount = new normalAccount(this, user, acc, fund, pass); //Account class에 password 추가
     account_info.insert(pair<string, normalAccount*>(acc, newAccount));
     return newAccount;
 }
@@ -303,10 +290,6 @@ void ATM::readCardInfo(string accNum) {
     
     }
 }
-
-
-
-
 
 void ATM::showInfo(string val) {
     if(isAdmin == false) {
@@ -517,8 +500,6 @@ void ATM::deposit() {
         writeFile << message;
         writeFile.close();
     }
-
-
 }
 
 void ATM::withdrawal() {
@@ -942,9 +923,10 @@ int main() {
     // Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
     // Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
 
-    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000, false);
-    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000, false);
-    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000, false);
+    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
+    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
+    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
+    Admin* Account4 = new Admin(&Kakao, "Kate", "4");
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
