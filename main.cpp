@@ -1052,6 +1052,31 @@ int printATMCash(ATM** atmarr, int length) {
     return 0;
 }
 
+ATM* makeATM() {
+    string bankname, serial;
+    bool SingleBank, Unilingual;
+    int cashes;
+    cout << "Please enter the name of the bank" << endl;
+    cin >> bankname;
+    cout << "Please enter the serial of the ATM" << endl;
+    cin >> serial;
+    cout << "Is it single-bank ATM? If it is right, please enter [Y]" << endl;
+    cout << "If it is multi-bank, please enter [N]" << endl;
+    string temp1;
+    cin >> temp1;
+    if(temp1=="Y"||temp1=="y") SingleBank = true;
+    else SingleBank = false;
+    string temp2;
+    cin >> temp2;
+    cout << "Is it unilingual ATM? If it is right, please enter [Y]" << endl;
+    cout << "If it is bilingual ATM, please enter [N]" << endl;
+    if(temp2=="Y"||temp2=="y") Unilingual = true;
+    else Unilingual = false;
+    cout << "Please enter the amount of cashes in this ATM" << endl;
+    cin >> cashes;
+
+    return &ATM(bankname, serial, SingleBank, Unilingual, cashes);
+}
 
 int main() {
 
