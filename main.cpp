@@ -14,6 +14,23 @@ int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
 // int fee[7];
 map<string, Bank*> bankmap;
 
+void init_fee() {
+    cout << "Please type the deposit fee for non-primary banks" << endl;
+    cin >> fee[0];
+    cout << "Please type the deposit fee for primary banks" << endl;
+    cin >> fee[1];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[2];
+    cout << "Please type the withdrawal fee for non-primary banks" << endl;
+    cin >> fee[3];
+    cout << "Please type the transfer fee between primary banks" << endl;
+    cin >> fee[4];
+    cout << "Please type the transfer fee between primary and non-primary banks" << endl;
+    cin >> fee[5];
+    cout << "Please type the transfer fee between non-primary banks" << endl;
+    cin >> fee[6];
+}
+
 
 //-----------------------------------------------------------------------------
 
@@ -861,22 +878,7 @@ int ATM::execute() {
 }
 //----------------------------------------
 
-void init_fee() {
-    cout << "Please type the deposit fee for non-primary banks" << endl;
-    cin >> fee[0];
-    cout << "Please type the deposit fee for primary banks" << endl;
-    cin >> fee[1];
-    cout << "Please type the withdrawal fee for non-primary banks" << endl;
-    cin >> fee[2];
-    cout << "Please type the withdrawal fee for non-primary banks" << endl;
-    cin >> fee[3];
-    cout << "Please type the transfer fee between primary banks" << endl;
-    cin >> fee[4];
-    cout << "Please type the transfer fee between primary and non-primary banks" << endl;
-    cin >> fee[5];
-    cout << "Please type the transfer fee between non-primary banks" << endl;
-    cin >> fee[6];
-}
+
 
 int main() {
 
