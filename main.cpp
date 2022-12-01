@@ -565,6 +565,8 @@ void ATM::deposit() {
         writeFile << message;
         writeFile.close();
     }
+
+
 }
 
 void ATM::withdrawal() {
@@ -1004,7 +1006,8 @@ int ATM::execute() {
         adminMenu();
         return 0;
     } else {
-        if(isEnglish) {
+        while(1) {
+            if(isEnglish) {
             cout << "Account balance: " << usingAccount->getFund() << endl;
             cout << "Please select work what you want to do." << endl;
             cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
@@ -1026,32 +1029,30 @@ int ATM::execute() {
                     cout << "Wrong Approach" << endl;
                     return 0;
             }
-        }
-
-        else {
-            cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
-            cout << "원하는 작업을 선택해주세요" << endl;
-            cout << "1: 입금, 2: 출금, 3: 송금, 4: 취소" << endl;
-            cin >> work;
-            switch (work) {
-                case 1:
-                    deposit();
-                    return 0;
-                case 2:
-                    withdrawal();
-                    return 0;
-                case 3:
-                    transfer();
-                    return 0;
-                case 4:
-                    cout << "취소되었습니다." << endl;
-                    return 0;
-                default:
-                    cout << "잘못된 접근입니다. " << endl;
-                    return 0;
+        } else {
+                cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
+                cout << "원하는 작업을 선택해주세요" << endl;
+                cout << "1: 입금, 2: 출금, 3: 송금, 4: 취소" << endl;
+                cin >> work;
+                switch (work) {
+                    case 1:
+                        deposit();
+                        return 0;
+                    case 2:
+                        withdrawal();
+                        return 0;
+                    case 3:
+                        transfer();
+                        return 0;
+                    case 4:
+                        cout << "취소되었습니다." << endl;
+                        return 0;
+                    default:
+                        cout << "잘못된 접근입니다. " << endl;
+                        return 0;
+                }
             }
-        }
-        
+        } 
     }
 }
 
@@ -1134,18 +1135,18 @@ int main() {
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
     //Test Case : Action1
-    ATM1->execute();
-    printAccountBalance(accountArray, numOfAccount);
-    printATMCash(atmArray, numOfATM);
+    // ATM1->execute();
+    // printAccountBalance(accountArray, numOfAccount);
+    // printATMCash(atmArray, numOfATM);
     //Test Case : Action2
     ATM2->execute();
     printAccountBalance(accountArray, numOfAccount);
     printATMCash(atmArray, numOfATM);
 
     //Test Case : Action3
-    ATM3->execute();
-    printAccountBalance(accountArray, numOfAccount);
-    printATMCash(atmArray, numOfATM);
+    // ATM3->execute();
+    // printAccountBalance(accountArray, numOfAccount);
+    // printATMCash(atmArray, numOfATM);
 
     return 0;
 }
