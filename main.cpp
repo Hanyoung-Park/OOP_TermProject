@@ -517,6 +517,11 @@ void ATM::deposit() {
     TransactionID += 1;
     message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
     history += message;
+    if(isEnglish==true){
+        cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+    }else{
+        cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+    }
     ofstream writeFile(filePath.data());
     if (writeFile.is_open() ){
         writeFile << message;
@@ -642,7 +647,7 @@ void ATM::withdrawal() {
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
         }else{
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
-    }
+        }
         ofstream writeFile(filePath.data());
         if (writeFile.is_open()){
             writeFile << message;
