@@ -165,7 +165,7 @@ string Bank::getBankName() {
 
 normalAccount* Bank::returnAccount(string accountNumber, bool English) {
     string inputpassword;
-    if (English == 'true')
+    if (English == true)
         cout << "Password?" << endl;
     else    
         cout << "비밀번호를 입력하여 주십시오" << endl;
