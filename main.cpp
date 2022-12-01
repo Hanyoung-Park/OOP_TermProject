@@ -251,6 +251,8 @@ public:
     
     int execute();
     int adminMenu();
+
+    int getAmountOfCashes();
 };
 
 ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes) {
@@ -978,6 +980,35 @@ int ATM::execute() {
     }
 }
 
+int ATM::getAmountOfCashes() {
+    return amountOfCashes;
+}
+
+int printAccountBalance(Account** accarr) {
+    int i=0;
+    try {
+        while(1) {
+            cout << "[Account " << i+1 << "] Balance: " << accarr[i]->getFund() << endl; 
+        }
+        return 0;
+    } catch (const out_of_range& e) {
+        return 1;
+    } 
+}
+
+int printATMCash(ATM** atmarr) {
+    int i=0;
+    try {
+        while(1) {
+            cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
+        }
+        return 0;
+    } catch (const out_of_range& e) {
+        return 1;
+    }
+}
+
+
 int main() {
 
     Bank Kakao = Bank("Kakao");
@@ -1010,4 +1041,3 @@ int main() {
     //Test Case : Action3
     return 0;
 }
-
