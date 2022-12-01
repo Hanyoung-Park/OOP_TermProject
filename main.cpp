@@ -372,6 +372,9 @@ void ATM::showHistory() {
 int ATM::startSession() {
 
     if(isEnglish) {
+        cout << primaryBankName << " ATM" << endl;
+        cout << boolalpha << "Unilingual: " << isUnilingual << endl;
+        cout << boolalpha << "Single-ATM: " << isSingleBank << endl;
         cout << "Welcome\nTo start, please insert your debit card." << endl;
         cout << "Insert your card" << endl;
     }
