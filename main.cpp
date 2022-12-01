@@ -1017,6 +1017,9 @@ int printATMCash(ATM** atmarr) {
 
 int main() {
 
+    //Initialize fee
+    //init_fee();
+
     Bank Kakao = Bank("Kakao");
     Bank Daegu = Bank("Daegu");
 
@@ -1038,8 +1041,15 @@ int main() {
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
+
+    //making array for print information
+    ATM* atmArray[3] = {ATM1, ATM2, ATM3};
+    Account* accountArray[3] {Account1, Account2, Account3};
+
     //Test Case : Action1
     ATM2->execute();
+    printAccountBalance(accountArray);
+    printATMCash(atmArray);
 
     //Test Case : Action2
 
