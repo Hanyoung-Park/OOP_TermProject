@@ -693,7 +693,7 @@ void ATM::transfer() {
         cout << "Please choose between Account Transfer or Cash Transfer" << endl;
         cout << "1: Account Transfer, 2: Cash Transfer, 3: Cancel" << endl;
         cin >> isCashTf;
-        if(isCashTf==2) {
+        if(isCashTf==3) {
             cout << "Canceled" << endl;
             endSession();
             return;
@@ -738,7 +738,7 @@ void ATM::transfer() {
             }
         }
        
-        if(isCashTf==1) {
+        if(isCashTf==2) {
             cout << "Please enter the number of 50,000 won notes to be deposited." << endl;
             cin >> moneyArr[0];
             cout << "Please enter the number of 10,000 won notes to be deposited." << endl;
@@ -782,8 +782,8 @@ void ATM::transfer() {
         cout << "계좌 송금을 할 지, 현금 송금을 할지 선택해주세요." << endl;
         cout << "1: 계좌 송금, 2: 현금 송금, 3: 취소" << endl;
         cin >> isCashTf;
-        if(isCashTf==2) {
-            cout << "Canceled" << endl;
+        if(isCashTf==3) {
+            cout << "취소되었습니다" << endl;
             endSession();
             return;
         }
@@ -828,7 +828,7 @@ void ATM::transfer() {
             }
         }
        
-        if(isCashTf) {
+        if(isCashTf==2) {
             cout << "입금할 5만원권 장수를 입력해주세요." << endl;
             cin >> moneyArr[0];
             cout << "입금할 만원권 장수를 입력해주세요." << endl;
@@ -868,10 +868,10 @@ void ATM::transfer() {
         }
         
     }
-    if(isCashTf==false) *usingAccount -= (transferMoney+transferFee);
+    if(isCashTf==0) *usingAccount -= (transferMoney+transferFee);
     *transferAccount += transferMoney;
     TransactionID += 1;
-    if(isCashTf==false) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    if(isCashTf==0) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
@@ -1057,6 +1057,7 @@ int printATMCash(ATM** atmarr, int length) {
     int i;
     for(i=0;i<length;i++) {
         cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
+        i+=1;
     }
     return 0;
 }
