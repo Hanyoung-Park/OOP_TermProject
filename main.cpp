@@ -291,7 +291,7 @@ int ATM::startSession() {
             cout << "사용할 수 없는 카드입니다." << endl;
         }
         endSession();
-        return 0;
+        return 1;
     }
     int i = 0;
     while(i < 3){
@@ -304,7 +304,7 @@ int ATM::startSession() {
         }
      }
      endSession();
-     return 0;
+     return 1;
 }
 
 void ATM::selectLanguage() {
@@ -817,10 +817,18 @@ int ATM::adminMenu() {
 }
 
 int ATM::execute() {
+    int cheack;
     int work;
     
     selectLanguage();
-    startSession();
+    try {
+        if (startSession()) {
+            throw cheack;
+        }
+    }
+    catch (int n) {
+        return 0;
+    }
 
     if(isAdmin) {
         adminMenu();
@@ -900,3 +908,4 @@ int main() {
     //Test Case : Action3
     return 0;
 }
+
