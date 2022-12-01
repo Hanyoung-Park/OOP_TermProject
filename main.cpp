@@ -565,8 +565,6 @@ void ATM::deposit() {
         writeFile << message;
         writeFile.close();
     }
-
-
 }
 
 void ATM::withdrawal() {
