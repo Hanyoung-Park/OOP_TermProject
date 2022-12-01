@@ -194,6 +194,8 @@ protected:
     //---Account Information
     Account* usingAccount;
     string filePath = serial+"history.txt";
+
+    int errorCheck=0; // Error checker
     
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
@@ -239,6 +241,7 @@ void ATM::readCardInfo(string accNum) {
     }
     if (usingAccount==NULL){
         cout << "No account found, returning card" << endl;
+        errorCheck = 1;
         endSession();
         return;
     }
@@ -310,6 +313,7 @@ int ATM::startSession() {
         endSession();
         return 1;
     }
+    if(errorCheck==1) return 1;
     int i = 0;
     while(i < 3){
         Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
@@ -910,4 +914,3 @@ int main() {
     //Test Case : Action3
     return 0;
 }
-
