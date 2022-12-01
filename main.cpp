@@ -31,7 +31,6 @@ void init_fee() {
     cin >> fee[6];
 }
 
-
 //-----------------------------------------------------------------------------
 
 class Account
@@ -340,11 +339,6 @@ void ATM::readCardInfo(string accNum) {
         this->endSession();
     }
 }
-
-
-
-
-
 
 void ATM::showInfo(string val) {
     if(isAdmin == false) {
@@ -1041,30 +1035,21 @@ int ATM::getAmountOfCashes() {
     return amountOfCashes;
 }
 
-int printAccountBalance(Account** accarr) {
-    int i=0;
-    try {
-        while(1) {
-            cout << "[Account " << i+1 << "] Balance: " << accarr[i]->getFund() << endl; 
-            i+=1;
-        }
-        return 0;
-    } catch (const out_of_range& e) {
-        return 1;
-    } 
+int printAccountBalance(Account** accarr, int length) {
+    int i;
+    for(i=0;i<length;i++) {
+        cout << "[Account " << i+1 << "] Balance: " << accarr[i]->getFund() << endl; 
+    }
+    return 0;    
 }
 
-int printATMCash(ATM** atmarr) {
-    int i=0;
-    try {
-        while(1) {
-            cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
-            i+=1;
-        }
-        return 0;
-    } catch (const out_of_range& e) {
-        return 1;
+int printATMCash(ATM** atmarr, int length) {
+    int i;
+    for(i=0;i<length;i++) {
+        cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
+        i+=1;
     }
+    return 0;
 }
 
 
@@ -1094,18 +1079,24 @@ int main() {
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
     //making array for print information
-    ATM* atmArray[3] = {ATM1, ATM2, ATM3};
-    Account* accountArray[3] = {Account1, Account2, Account3};
+    int numOfATM = 3;
+    int numOfAccount = 3;
+    ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
+    Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
     //Test Case : Action1
-    ATM2->execute();
-    printAccountBalance(accountArray);
-    printATMCash(atmArray);
+    ATM1->execute();
+    printAccountBalance(accountArray, numOfAccount);
+    printATMCash(atmArray, numOfATM);
     //Test Case : Action2
-
+    ATM2->execute();
+    printAccountBalance(accountArray, numOfAccount);
+    printATMCash(atmArray, numOfATM);
 
     //Test Case : Action3
+    ATM3->execute();
+    printAccountBalance(accountArray, numOfAccount);
+    printATMCash(atmArray, numOfATM);
+
     return 0;
 }
-
-
