@@ -553,15 +553,15 @@ void ATM::deposit() {
 
 void ATM::withdrawal() {
     int withdrawalMoney;
-    int includingFee;
+    int withdrawalFee;
     string message;
     int cnt = 0;
     string keepGoing;
 
     if(isPrimaryBank) {
-        includingFee = fee[2];
+        withdrawalFee = fee[2];
     } else {
-        includingFee = fee[3];
+        withdrawalFee = fee[3];
     }
 
     while(1) {
@@ -593,8 +593,7 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            includingFee += withdrawalMoney;
-            if(amountOfCashes<includingFee) {
+            if(amountOfCashes<withdrawalFee+withdrawalMoney) {
                 cout << "Sorry, This ATM does not have enough money in it. " << endl;
                 endSession();
                 return;
@@ -608,7 +607,7 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            *usingAccount -= includingFee;
+            *usingAccount -= withdrawalFee+withdrawalMoney;
             cout << "Your withdrawal has been successful." << endl;
             cout << "HERE" << endl;
             cout << "Changed balance is " << usingAccount->getFund() << endl;
@@ -640,8 +639,7 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             }
-            includingFee += withdrawalMoney;
-            if(amountOfCashes<includingFee) {
+            if(amountOfCashes<withdrawalFee+withdrawalMoney) {
                 cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
                 endSession();
                 return;
@@ -655,7 +653,7 @@ void ATM::withdrawal() {
                 endSession();
                 return;
             } 
-            *usingAccount -= includingFee;
+            *usingAccount -= withdrawalFee+withdrawalMoney;
             cout << "출금이 성공적으로 완료되었습니다." << endl;
         }
     
@@ -667,7 +665,7 @@ void ATM::withdrawal() {
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
         }else{
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
-        }
+    }
         ofstream writeFile(filePath.data());
         if (writeFile.is_open()){
             writeFile << message;
