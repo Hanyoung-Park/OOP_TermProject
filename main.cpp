@@ -477,8 +477,7 @@ void ATM::deposit() {
         }
         *usingAccount += depositMoney;
         cout << "Your deposit has been succesful." << endl;
-        cout << "HERE" << endl;
-        cout << "Changed balance is " << usingAccount->getFund() << endl;
+        // cout << "Changed balance is " << usingAccount->getFund() << endl;
     } else {
         cout << "현금과 수표 중 사용하실 방법을 선택해주세요." << endl;
         cout << "현금: 0, 수표: 1, 취소: 2" << endl;

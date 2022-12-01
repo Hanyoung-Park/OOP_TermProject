@@ -1,1 +1,1 @@
-1: 1 deposit 2
+1: 1 deposit 66000
