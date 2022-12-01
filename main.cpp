@@ -261,7 +261,7 @@ public:
     void readCardInfo(string accNum);
     void showInfo(string val);
     int startSession();
-    void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
+    // void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     void selectLanguage(); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
     void deposit(); //4번
@@ -337,14 +337,13 @@ void ATM::readCardInfo(string accNum) {
         }
     }
     catch (int ex) {
-        this->endSession();
+
     }
 }
 
 void ATM::showInfo(string val) {
     if(isAdmin == false) {
         cout << "Wrong Approach" << endl;
-        endSession();
         return;
     }
     if(val=="serial") {
@@ -357,19 +356,17 @@ void ATM::showInfo(string val) {
 void ATM::showHistory() {
     if(isAdmin==false) {
         cout << "Wrong Approach" << endl;
-        endSession();
         return;
     }
     if(history=="") {
         cout << "No record" << endl;
-        endSession();
         return;
     }
     cout << history << endl;
-    endSession();
 }
 
 int ATM::startSession() {
+    withdrawalCnt = 0;
 
     if(isEnglish) {
         cout << primaryBankName << " ATM" << endl;
@@ -393,7 +390,6 @@ int ATM::startSession() {
         } else {
             cout << "사용할 수 없는 카드입니다." << endl;
         }
-        endSession();
         return 1;
     }
     if(errorCheck==1) return 1;
@@ -416,7 +412,6 @@ int ATM::startSession() {
              return 0;
         }
      }
-     endSession();
      return 1;
 }
 
@@ -456,7 +451,6 @@ void ATM::deposit() {
         cin >> isCheck;
         if(isCheck==2) {
             cout << "Canceled" << endl;
-            endSession();
             return;
         }
         if(isCheck==0) {
@@ -471,7 +465,6 @@ void ATM::deposit() {
             
             if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
                 cout << "Too many banknotes" << endl;
-                endSession();
                 return;
             }
             depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
@@ -481,7 +474,6 @@ void ATM::deposit() {
             cin >> amountOfCheck;
             if(amountOfCheck>30) {
                 cout << "Too many checks" << endl;
-                endSession();
                 return;
             }
             cout << "Please enter the amount of fund to deposit." << endl;
@@ -493,7 +485,6 @@ void ATM::deposit() {
         cin >> temp;
         if(temp=='Y' || temp=='y') {
             cout << "Canceled" << endl;
-            endSession();
             return;
         }
         *usingAccount += depositMoney;
@@ -505,7 +496,6 @@ void ATM::deposit() {
         cin >> isCheck;
         if(isCheck==2) {
             cout << "거래가 취소되었습니다." << endl;
-            endSession();
             return;
         }
         if(isCheck==0) {
@@ -519,7 +509,6 @@ void ATM::deposit() {
             cin >> moneyArr[3];
             if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
                 cout << "지폐가 너무 많습니다." << endl;
-                endSession();
                 return;
             }
             depositMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
@@ -529,7 +518,6 @@ void ATM::deposit() {
             cin >> amountOfCheck;
             if(amountOfCheck>30) {
                 cout << "수표가 너무 많습니다." << endl;
-                endSession();
                 return;
             }
             cout << "입금할 금액을 입력해주세요." << endl;
@@ -541,7 +529,6 @@ void ATM::deposit() {
         cin >> temp;
         if(temp=='Y' || temp=='y') {
             cout << "거래가 취소되었습니다." << endl;
-            endSession();
             return;
         }
         *usingAccount += depositMoney;
@@ -588,7 +575,6 @@ void ATM::withdrawal() {
     if(isEnglish==true) {
         if(withdrawalCnt==3) {
             cout << "You cannot withdraw more than 3 times at once" << endl;
-            endSession();
             return;
         }
 
@@ -601,12 +587,10 @@ void ATM::withdrawal() {
         }
         if(withdrawalMoney>500000) {
             cout << "Withdrawal limit exceeded" << endl;
-            endSession();
             return;
         }
         if(amountOfCashes<withdrawalFee+withdrawalMoney) {
             cout << "Sorry, This ATM does not have enough money in it. " << endl;
-            endSession();
             return;
         }
         cout << "If you want to cancel, please type [Y]" << endl;
@@ -615,7 +599,6 @@ void ATM::withdrawal() {
         cin >> temp;
         if(temp=='Y' || temp=='y') {
             cout << "Canceled" << endl;
-            endSession();
             return;
         }
         *usingAccount -= withdrawalFee+withdrawalMoney;
@@ -626,7 +609,6 @@ void ATM::withdrawal() {
     } else {
         if(withdrawalCnt==3) {
             cout << "3번까지만 출금할 수 있습니다." << endl;
-            endSession();
             return;
         }
         cout << "출금할 금액을 입력해주세요." << endl;
@@ -638,12 +620,10 @@ void ATM::withdrawal() {
         }
         if(withdrawalMoney>500000) {
             cout << "출금한도 초과" << endl;
-            endSession();
             return;
         }
         if(amountOfCashes<withdrawalFee+withdrawalMoney) {
             cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
-            endSession();
             return;
         }
         cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
@@ -652,7 +632,6 @@ void ATM::withdrawal() {
         cin >> temp;
         if(temp=='Y' || temp=='y') {
             cout << "거래가 취소되었습니다." << endl;
-            endSession();
             return;
         } 
         *usingAccount -= withdrawalFee+withdrawalMoney;
@@ -695,7 +674,6 @@ void ATM::transfer() {
         cin >> isCashTf;
         if(isCashTf==3) {
             cout << "Canceled" << endl;
-            endSession();
             return;
         }
         
@@ -714,7 +692,6 @@ void ATM::transfer() {
             }
             if(cnt==3) {
                 cout << "Session ended: Please get your card" << endl;
-                endSession();
                 return;
             }
         }
@@ -733,7 +710,6 @@ void ATM::transfer() {
             }
             if (cnt==3) {
                 cout << "Session ended: Please get your card" << endl;
-                endSession();
                 return;
             }
         }
@@ -749,7 +725,6 @@ void ATM::transfer() {
             cin >> moneyArr[3];
             if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
                 cout << "Too many banknotes" << endl;
-                endSession();
                 return;
             }
             transferMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
@@ -770,7 +745,6 @@ void ATM::transfer() {
             }
             if(transferMoney+transferFee>usingAccount->getFund()) {
                 cout << "Sorry, there are not enough funds in the account." << endl;
-                endSession();
                 return;
             }
             
@@ -784,7 +758,6 @@ void ATM::transfer() {
         cin >> isCashTf;
         if(isCashTf==3) {
             cout << "취소되었습니다" << endl;
-            endSession();
             return;
         }
         
@@ -804,7 +777,6 @@ void ATM::transfer() {
             }
             if(cnt==3) {
                 cout << "세션이 종료되었습니다.: 카드를 가져가주세요." << endl;
-                endSession();
                 return;
             }
         }
@@ -823,7 +795,6 @@ void ATM::transfer() {
             }
             if (cnt==3) {
                 cout << "세션이 종료되었습니다.: 카드를 가져가주세요." << endl;
-                endSession();
                 return;
             }
         }
@@ -839,7 +810,6 @@ void ATM::transfer() {
             cin >> moneyArr[3];
             if(moneyArr[0]+moneyArr[1]+moneyArr[2]+moneyArr[3]>50) {
                 cout << "지폐가 너무 많습니다." << endl;
-                endSession();
                 return;
             }
             transferMoney=50000*moneyArr[0]+10000*moneyArr[1]+5000*moneyArr[2]+1000*moneyArr[3];
@@ -862,7 +832,6 @@ void ATM::transfer() {
             
             if(transferMoney+transferFee>usingAccount->getFund()) {
                 cout << "죄송합니다만 계좌에 충분한 금액이 들어있지 않습니다." << endl;
-                endSession();
                 return;
             }
         }
@@ -888,14 +857,14 @@ void ATM::transfer() {
     }
 }
 
-void ATM::endSession() {
-    usingAccount = nullptr;
-    withdrawalCnt = 0;
-    if(isEnglish)
-        cout << "END SESSION" << endl;
-    else
-        cout << "세션을 종료합니다" << endl;
-}
+// void ATM::endSession() {
+//     usingAccount = nullptr;
+//     withdrawalCnt = 0;
+//     if(isEnglish)
+//         cout << "END SESSION" << endl;
+//     else
+//         cout << "세션을 종료합니다" << endl;
+// }
 
 int ATM::adminMenu() {
     int work;
@@ -953,11 +922,11 @@ int ATM::adminMenu() {
                     else isSingleBankYN = "N";
                     cout << "싱글뱅크 여부: " << isSingleBankYN << endl;
 
-                    endSession();
+                    // endSession();
                     break;
                 case 2:
                     showHistory();
-                    endSession();
+                    // endSession();
                     break;
                 case 3:
                     cout << "취소" << endl;
