@@ -1026,7 +1026,6 @@ int printATMCash(ATM** atmarr, int length) {
     int i;
     for(i=0;i<length;i++) {
         cout << "[ATM " << i+1 << "] Remaining Cash: " << atmarr[i]->getAmountOfCashes() << endl;
-        i+=1;
     }
     return 0;
 }
