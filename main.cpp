@@ -46,13 +46,11 @@ protected:
 
 public:
     Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
-    bool admin();
+    virtual bool admin();
     int getFund();
     Bank* getBank();
     string getNum();
     string getPassword();
-    Account &operator+=(int amount);
-    Account &operator-=(int amount);
 };
 
 Account::Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin)
@@ -64,9 +62,6 @@ Account::Account(Bank* bank, string userName, string accountNumber, int availabl
     this->availableFund = availableFund;
     this->password = password;
     }
-bool Account::admin() {
-    return isAdmin;
-}
 
 int Account::getFund()
 {
@@ -88,40 +83,83 @@ string Account::getPassword()
     return password;
 }
 
-Account &Account::operator+=(int amount)
+class normalAccount : public Account {
+    public:
+        normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
+        Account &operator+=(int amount);
+        Account &operator-=(int amount);
+        bool admin();
+};
+
+normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
+    this->isAdmin = isAdmin;
+    this->bank = bank;
+    this->userName = userName;
+    this->accountNumber = accountNumber;
+    this->availableFund = availableFund;
+    this->password = password;
+}
+
+Account &normalAccount::operator+=(int amount)
 {
     cout << "operator overloader" << endl;
     availableFund += amount;
     return *this;
 }
 
-Account &Account::operator-=(int amount)
+Account &normalAccount::operator-=(int amount)
 {
     availableFund -= amount;
     return *this;
+}
+
+bool normalAccount::admin() {
+    return isAdmin;
+}
+
+
+
+class Admin : public Account {
+    public:
+        Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = true);
+        bool admin();
+};
+Admin::Admin(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin) {
+    this->isAdmin = isAdmin;
+    this->bank = bank;
+    this->userName = userName;
+    this->accountNumber = accountNumber;
+    this->availableFund = availableFund;
+    this->password = password;
+}
+
+bool Admin::admin() {
+    cout << "admin card insert" << endl;
+    return isAdmin;
+
 }
 
 //-----------------------------------------------------------------------------
 class Bank {
 protected:
     string bankName;
-    map<string, Account*> account_info;
+    map<string, normalAccount*> account_info;
 
 public:
     Bank(string bankName);
     ~Bank();
-    int validPassword(Account userAccount, int num);
-    Account* returnAccount(string accountNumber);
-    Account* openAccount();
+    int validPassword(normalAccount userAccount, int num);
+    normalAccount* returnAccount(string accountNumber);
+    normalAccount* openAccount();
     string getBankName();
-    map<string, Account*> getAccountMap();
-    Account* initAccount(string bank, string user, string acc, string pass, int fund, bool admin);
+    map<string, normalAccount*> getAccountMap();
+    normalAccount* initAccount(string bank, string user, string acc, string pass, int fund, bool admin);
 
 };
 
 Bank::Bank(string bankName) {
     this->bankName = bankName;
-    account_info = map<string, Account*>();
+    account_info = map<string, normalAccount*>();
 }
 
 Bank::~Bank() {}
@@ -130,7 +168,7 @@ string Bank::getBankName() {
     return bankName;   
 }
 
-Account* Bank::returnAccount(string accountNumber) {
+normalAccount* Bank::returnAccount(string accountNumber) {
     string inputpassword;
     cout << "Password?" << endl;
     cin >> inputpassword;
@@ -140,11 +178,11 @@ Account* Bank::returnAccount(string accountNumber) {
     return nullptr;
 }
 
-map<string, Account*> Bank::getAccountMap() {
+map<string, normalAccount*> Bank::getAccountMap() {
     return account_info;
 }
 
-Account* Bank::openAccount() {
+normalAccount* Bank::openAccount() {
     string bankName;
     string userName;
     string accountNum;
@@ -164,16 +202,16 @@ Account* Bank::openAccount() {
     cout << "input is admin(true/false):  " << endl;
     cin >> admin;
 
-    Account* newAccount;
-    newAccount = new Account(this, userName, accountNum, fund, password, admin); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(accountNum, newAccount));
+    normalAccount* newAccount;
+    newAccount = new normalAccount(this, userName, accountNum, fund, password, admin); //Account class에 password 추가
+    account_info.insert(pair<string, normalAccount*>(accountNum, newAccount));
     return newAccount;
 }
 
-Account* Bank::initAccount(string bank, string user, string acc, string pass, int fund, bool admin) {
-    Account* newAccount;
-    newAccount = new Account(this, user, acc, fund, pass, admin); //Account class에 password 추가
-    account_info.insert(pair<string, Account*>(acc, newAccount));
+normalAccount* Bank::initAccount(string bank, string user, string acc, string pass, int fund, bool admin) {
+    normalAccount* newAccount;
+    newAccount = new normalAccount(this, user, acc, fund, pass, admin); //Account class에 password 추가
+    account_info.insert(pair<string, normalAccount*>(acc, newAccount));
     return newAccount;
 }
 
@@ -192,7 +230,7 @@ protected:
     bool isPrimaryBank;
     int TransactionID;
     //---Account Information
-    Account* usingAccount;
+    normalAccount* usingAccount;
     string filePath = serial+"history.txt";
 
     int errorCheck=0; // Error checker
@@ -228,9 +266,9 @@ void ATM::readCardInfo(string accNum) {
     int valid = 0;
     int n;
     for (it = bankmap.begin(); it!= bankmap.end(); it++) {
-        map<string, Account*> tempmap;
+        map<string, normalAccount*> tempmap;
         tempmap = it->second->getAccountMap();
-        map<string, Account*>::iterator it2;
+        map<string, normalAccount*>::iterator it2;
 
         for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
             if(accNum == it2->second->getNum()) {
@@ -316,7 +354,7 @@ int ATM::startSession() {
     if(errorCheck==1) return 1;
     int i = 0;
     while(i < 3){
-        Account* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
+        normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum());
         if (acc == nullptr){
              cout << "Wrong password, Please enter your password again" << endl;
              i++;
@@ -602,8 +640,8 @@ void ATM::transfer() {
     string accNum;
     string transferBankName;
     Bank* transferBank;
-    Account* transferAccount;
-    map<string, Account*> account_info;
+    normalAccount* transferAccount;
+    map<string, normalAccount*> account_info;
     string message;
     int moneyArr[4];
     int isCashTf;
@@ -897,9 +935,9 @@ int main() {
     // Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000, false);
     // Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000, false);
 
-    Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 5000, false);
-    Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 5000, false);
-    Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 5000, false);
+    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 5000, false);
+    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 5000, false);
+    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 5000, false);
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
@@ -914,3 +952,4 @@ int main() {
     //Test Case : Action3
     return 0;
 }
+
