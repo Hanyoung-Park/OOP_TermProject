@@ -775,8 +775,6 @@ void ATM::transfer() {
             }
             
         }
-        cout << "P" << primaryBankName << endl; //##
-        cout << transferBankName << endl; //##
         cout << "Your transfer has been succesful." << endl;
         
         
