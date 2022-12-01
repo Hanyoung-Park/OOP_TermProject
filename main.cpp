@@ -848,11 +848,11 @@ void ATM::transfer() {
     history += message;
     cout << "HERE" << endl;
     if(isEnglish==true){
-        cout << "Changed balance is " << usingAccount->getFund() << endl;
-        cout << "Changed balance is " << transferAccount->getFund() << endl;
+        cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+        cout << "["<< transferAccount->getNum() << "] "<<"Changed balance is " << transferAccount->getFund() << endl;
     }else{
-        cout << "거래 후 잔액: " << usingAccount->getFund() << endl;
-        cout << "거래 후 잔액: " << transferAccount->getFund() << endl;
+        cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+        cout << "["<< transferAccount->getNum() << "] "<< "거래 후 잔액: " << transferAccount->getFund() << endl;
     }
     ofstream writeFile(filePath.data());
     if (writeFile.is_open() ){
