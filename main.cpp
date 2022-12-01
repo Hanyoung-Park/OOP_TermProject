@@ -945,7 +945,7 @@ int ATM::adminMenu() {
                     break;
                 case 3:
                     cout << "Canceled" << endl;
-                    break;
+                    return 0;
                 default:
                     cout << "Wrong Approach" << endl;
                     break;
@@ -978,7 +978,7 @@ int ATM::adminMenu() {
                     break;
                 case 3:
                     cout << "취소" << endl;
-                    break;
+                    return 0;
                 default:
                     cout << "잘못된 접근입니다." << endl;
                     break;
@@ -986,6 +986,7 @@ int ATM::adminMenu() {
 
         }        
     }
+    return 0;
     
 }
 
@@ -1024,7 +1025,7 @@ int ATM::execute() {
                         break;
                     case 4:
                         cout << "Canceled" << endl;
-                        break;
+                        return 0;
                     default:
                         cout << "Wrong Approach" << endl;
                         break;
@@ -1046,7 +1047,7 @@ int ATM::execute() {
                         break;
                     case 4:
                         cout << "취소되었습니다." << endl;
-                        break;
+                        return 0;
                     default:
                         cout << "잘못된 접근입니다. " << endl;
                         break;
@@ -1054,6 +1055,7 @@ int ATM::execute() {
             }
         } 
     }
+    return 0;
 }
 
 int ATM::getAmountOfCashes() {
