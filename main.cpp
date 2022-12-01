@@ -706,7 +706,7 @@ void ATM::transfer() {
     int transferFee;
     if(isEnglish==true) {
         cout << "Please choose between Account Transfer or Cash Transfer" << endl;
-        cout << "Account Transfer: 0, Cash Transfer: 1, Cancel: 2" << endl;
+        cout << "1: Account Transfer, 2: Cash Transfer, 3: Cancel" << endl;
         cin >> isCashTf;
         if(isCashTf==2) {
             cout << "Canceled" << endl;
@@ -797,7 +797,7 @@ void ATM::transfer() {
         
     } else {
         cout << "계좌 송금을 할 지, 현금 송금을 할지 선택해주세요." << endl;
-        cout << "계좌 송금: 0, 현금 송금: 1, 취소: 2" << endl;
+        cout << "1: 계좌 송금, 2: 현금 송금, 3: 취소" << endl;
         cin >> isCashTf;
         if(isCashTf==2) {
             cout << "Canceled" << endl;
