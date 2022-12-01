@@ -769,6 +769,7 @@ void ATM::transfer() {
             if(bankmap[transferBankName] != NULL) {
                 transferBank = bankmap[transferBankName];
                 account_info = transferBank->getAccountMap();
+                break;
             } else {
                 cout << "정확한 은행명을 입력해주세요." << endl;
                 cnt += 1;
@@ -823,12 +824,12 @@ void ATM::transfer() {
             cin >> transferMoney;
             // Transfer Case 판별
             if(isPrimaryBank && transferBankName==primaryBankName) {
-                transferFee = 2000;
+                transferFee = fee[4];
             } else if((isPrimaryBank&&transferBankName!=primaryBankName) || (isPrimaryBank==false&&transferBankName==primaryBankName)) {
                 
-                transferFee = 3000;
+                transferFee = fee[5];
             } else {
-                transferFee = 4000;
+                transferFee = fee[6];
             }
             
             if(transferMoney+transferFee>usingAccount->getFund()) {
