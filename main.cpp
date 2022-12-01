@@ -638,6 +638,11 @@ void ATM::withdrawal() {
         TransactionID += 1;
         message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
         history += message;
+        if(isEnglish==true){
+        cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+        }else{
+        cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+    }
         ofstream writeFile(filePath.data());
         if (writeFile.is_open()){
             writeFile << message;
@@ -846,7 +851,6 @@ void ATM::transfer() {
     if(isCashTf==false) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     history += message;
-    cout << "HERE" << endl;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
         cout << "["<< transferAccount->getNum() << "] "<<"Changed balance is " << transferAccount->getFund() << endl;
@@ -1017,9 +1021,6 @@ int printATMCash(ATM** atmarr) {
 
 int main() {
 
-    //Initialize fee
-    //init_fee();
-
     Bank Kakao = Bank("Kakao");
     Bank Daegu = Bank("Daegu");
 
@@ -1041,15 +1042,8 @@ int main() {
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
-
-    //making array for print information
-    ATM* atmArray[3] = {ATM1, ATM2, ATM3};
-    Account* accountArray[3] {Account1, Account2, Account3};
-
     //Test Case : Action1
     ATM2->execute();
-    printAccountBalance(accountArray);
-    printATMCash(atmArray);
 
     //Test Case : Action2
 
