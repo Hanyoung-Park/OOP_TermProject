@@ -283,6 +283,8 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
+
+
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
     int valid = 0;
@@ -298,11 +300,14 @@ void ATM::readCardInfo(string accNum) {
             }
         }
         if (!valid) {
+            cout << it->first <<"에 존재하지 않음."<<endl;
             map<string, Admin*> adminTempmap;
             adminTempmap = it->second->getAdminMap();
             map<string, Admin*>::iterator it3;
             for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it2++) {
-                if(accNum == it3->second->getNum()) {
+                cout << "admin map" << it3->second->getNum() << endl;
+                if(it3->second->getNum() == accNum) {
+                    cout << "admin에 존재" << endl;
                     isAdmin = true;
                     valid = 1;
                 }
@@ -1075,8 +1080,7 @@ int main() {
     normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
     normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
     normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
-    Admin* admin_account = new Admin(&Kakao, "Kate", "4");
-    // bankmap.at("Kakao")->admin_account;
+    Admin* admin_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Kate", "4");    // bankmap.at("Kakao")->admin_account;
 
     ATM* ATM1 = new ATM("Kakao", "111111", true, true, 5000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 5000);
