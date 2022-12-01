@@ -145,7 +145,7 @@ public:
     ~Bank();
     int validPassword(normalAccount userAccount, int num);
     normalAccount* returnAccount(string accountNumber, bool English);
-    normalAccount* openAccount();
+    normalAccount* openAccount(bool isEnglish);
     string getBankName();
     map<string, normalAccount*> getAccountMap();
     map<string, Admin*> getAdminMap();
@@ -189,25 +189,35 @@ map<string, Admin*> Bank::getAdminMap() {
     return admin_info;
 }
 
-normalAccount* Bank::openAccount() {
-    string bankName;
+normalAccount* Bank::openAccount(bool isEnglish) {
     string userName;
     string accountNum;
     string password;
     int fund;
     bool admin;
-    cout << "input Bank Name: " << endl;
-    cin >> bankName;
-    cout << "input User Name: " << endl;
-    cin >> userName;
-    cout << "input Account Number(12-digit): " << endl;
-    cin >> accountNum;
-    cout << "input Password: " << endl;
-    cin >> password;
-    cout << "input available fund: " << endl;
-    cin >> fund;
-    cout << "input is admin(true/false):  " << endl;
-    cin >> admin;
+    if (isEnglish){
+        cout << "input User Name: " << endl;
+        cin >> userName;
+        cout << "input Account Number(12-digit): " << endl;
+        cin >> accountNum;
+        cout << "input Password: " << endl;
+        cin >> password;
+        cout << "input available fund: " << endl;
+        cin >> fund;
+        cout << "input is admin(true/false):  " << endl;
+        cin >> admin;
+    }else{
+        cout << "이름을 입력하여 주십시오: " << endl;
+        cin >> userName;
+        cout << "계좌번호를 입력하여 주십시오(12자리): " << endl;
+        cin >> accountNum;
+        cout << "비밀번호를 입력하여 주십시오: " << endl;
+        cin >> password;
+        cout << "계좌 잔고를 입력하여 주십시오: " << endl;
+        cin >> fund;
+        cout << "관리자 입니까?(true/false):  " << endl;
+        cin >> admin;
+    }
 
     normalAccount* newAccount;
     newAccount = new normalAccount(this, userName, accountNum, fund, password); //Account class에 password 추가
