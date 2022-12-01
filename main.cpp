@@ -1008,27 +1008,27 @@ int ATM::execute() {
     } else {
         while(1) {
             if(isEnglish) {
-            cout << "Account balance: " << usingAccount->getFund() << endl;
-            cout << "Please select work what you want to do." << endl;
-            cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
-            cin >> work;
-            switch (work) {
-                case 1:
-                    deposit();
-                    return 0;
-                case 2:
-                    withdrawal();
-                    return 0;
-                case 3:
-                    transfer();
-                    return 0;
-                case 4:
-                    cout << "Canceled" << endl;
-                    return 0;
-                default:
-                    cout << "Wrong Approach" << endl;
-                    return 0;
-            }
+                cout << "Account balance: " << usingAccount->getFund() << endl;
+                cout << "Please select work what you want to do." << endl;
+                cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
+                cin >> work;
+                switch (work) {
+                    case 1:
+                        deposit();
+                        break;
+                    case 2:
+                        withdrawal();
+                        break;
+                    case 3:
+                        transfer();
+                        break;
+                    case 4:
+                        cout << "Canceled" << endl;
+                        break;
+                    default:
+                        cout << "Wrong Approach" << endl;
+                        break;
+                }
         } else {
                 cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
                 cout << "원하는 작업을 선택해주세요" << endl;
@@ -1037,19 +1037,19 @@ int ATM::execute() {
                 switch (work) {
                     case 1:
                         deposit();
-                        return 0;
+                        break;
                     case 2:
                         withdrawal();
-                        return 0;
+                        break;
                     case 3:
                         transfer();
-                        return 0;
+                        break;
                     case 4:
                         cout << "취소되었습니다." << endl;
-                        return 0;
+                        break;
                     default:
                         cout << "잘못된 접근입니다. " << endl;
-                        return 0;
+                        break;
                 }
             }
         } 
