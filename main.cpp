@@ -882,7 +882,6 @@ int ATM::adminMenu() {
     int work;
 
     if(isEnglish) {
-        cout << "Account balance: " << usingAccount->getFund();
         cout << "Please select work what you want to do." << endl;
         cout << "1: Information of ATM, 2: History, 3: Cancel" << endl;
         cin >> work;
@@ -905,7 +904,6 @@ int ATM::adminMenu() {
         }
     }
     else {
-        cout << "계좌 잔고: " << usingAccount->getFund();
         cout << "원하는 작업을 골라주세요." << endl;
         cout << "1: ATM 정보, 2: 기록, 3: 취소" << endl;
         cin >> work;
@@ -949,6 +947,7 @@ int ATM::execute() {
         return 0;
     } else {
         if(isEnglish) {
+            cout << "Account balance: " << usingAccount->getFund() << endl;
             cout << "Please select work what you want to do." << endl;
             cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
             cin >> work;
@@ -972,6 +971,7 @@ int ATM::execute() {
         }
 
         else {
+            cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
             cout << "원하는 작업을 선택해주세요" << endl;
             cout << "1: 입금, 2: 출금, 3: 송금, 4: 취소" << endl;
             cin >> work;
@@ -1054,7 +1054,7 @@ int main() {
 
     //making array for print information
     ATM* atmArray[3] = {ATM1, ATM2, ATM3};
-    Account* accountArray[3] {Account1, Account2, Account3};
+    Account* accountArray[3] = {Account1, Account2, Account3};
 
     //Test Case : Action1
     ATM2->execute();
