@@ -138,6 +138,7 @@ class Bank {
 protected:
     string bankName;
     map<string, normalAccount*> account_info;
+    map<string, Admin*> admin_info;
 
 public:
     Bank(string bankName);
@@ -147,14 +148,18 @@ public:
     normalAccount* openAccount();
     string getBankName();
     map<string, normalAccount*> getAccountMap();
+    map<string, Admin*> getAdminMap();
     normalAccount* initAccount(string bank, string user, string acc, string pass, int fund);
     Admin* initAdminAcc(Bank* bank, string name, string acc);
 
 };
 
+
 Bank::Bank(string bankName) {
     this->bankName = bankName;
     account_info = map<string, normalAccount*>();
+    admin_info = map<string, Admin*>();
+
 }
 
 Bank::~Bank() {}
@@ -178,6 +183,10 @@ normalAccount* Bank::returnAccount(string accountNumber, bool English) {
 
 map<string, normalAccount*> Bank::getAccountMap() {
     return account_info;
+}
+
+map<string, Admin*> Bank::getAdminMap() {
+    return admin_info;
 }
 
 normalAccount* Bank::openAccount() {
@@ -212,11 +221,12 @@ normalAccount* Bank::initAccount(string bank, string user, string acc, string pa
     account_info.insert(pair<string, normalAccount*>(acc, newAccount));
     return newAccount;
 }
-
-Admin* Bank::initAdminAcc(Bank* bank, string name, string acc){
-    
+Admin* Bank::initAdminAcc(Bank* bank, string name, string acc) {
+    Admin* newAdmin;
+    newAdmin = new Admin(this, name, acc); 
+    admin_info.insert(pair<string, Admin*>(acc, newAdmin));
+    return newAdmin;
 }
-
 //------------------------------------------------------------------------------------------------
 
 class ATM {
@@ -263,7 +273,6 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
-
 void ATM::readCardInfo(string accNum) {
     map<string, Bank*>::iterator it;
     int valid = 0;
@@ -272,35 +281,47 @@ void ATM::readCardInfo(string accNum) {
         map<string, normalAccount*> tempmap;
         tempmap = it->second->getAccountMap();
         map<string, normalAccount*>::iterator it2;
-
         for (it2 = tempmap.begin(); it2!= tempmap.end(); it2++) {
             if(accNum == it2->second->getNum()) {
                 usingAccount = it2->second;
                 valid = 1;
             }
         }
+        if (!valid) {
+            map<string, Admin*> adminTempmap;
+            adminTempmap = it->second->getAdminMap();
+            map<string, Admin*>::iterator it3;
+            for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it2++) {
+                if(accNum == it3->second->getNum()) {
+                    isAdmin = true;
+                    valid = 1;
+                }
+            }
+
+        }
+        
     }
-    if (usingAccount==NULL){
+
+
+    if (valid == 0){
         if(isEnglish)
             cout << "No account found, returning card" << endl;
         else
             cout << "존재하지 않는 계좌입니다. 카드를 반환하겠습니다" << endl;
 
         errorCheck = 1;
-        endSession();
-        return;
     }
     try {
         if (valid == 0) {
             throw n;
         }
         isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
-        isAdmin = usingAccount->admin();
     }
     catch (int ex) {
         this->endSession();
     }
 }
+
 
 
 
@@ -1068,3 +1089,5 @@ int main() {
     //Test Case : Action3
     return 0;
 }
+
+
