@@ -1079,8 +1079,8 @@ int main() {
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 5000);
 
     //making array for print information
-    int numOfATM = 3;
-    int numOfAccount = 3;
+    const int numOfATM = 3;
+    const int numOfAccount = 3;
     ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
