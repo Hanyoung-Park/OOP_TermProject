@@ -367,6 +367,7 @@ void ATM::showHistory() {
 
 int ATM::startSession() {
     withdrawalCnt = 0;
+    errorCheck = 0;
 
     if(isEnglish) {
         cout << primaryBankName << " ATM" << endl;
@@ -1004,62 +1005,61 @@ int ATM::execute() {
     catch (int n) {
         return 0;
     }
-     if(isAdmin) {
-        adminMenu();
-        return 0;
-    } else {
-        while(1) {
-            if(isEnglish) {
-                cout << "Account balance: " << usingAccount->getFund() << endl;
-                cout << "Please select work what you want to do." << endl;
-                cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: exit" << endl;
-                cin >> work;
-                switch (work) {
-                    case 1:
-                        deposit();
-                        break;
-                    case 2:
-                        withdrawal();
-                        break;
-                    case 3:
-                        transfer();
-                        break;
-                    case 4:
-                        cout << "--Exit--" << endl;
-                        this->isAdmin = true;
-                        this->showHistory();
-                        return 0;
-                    default:
-                        cout << "Wrong Approach" << endl;
-                        break;
-                }
-        } else {
-                cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
-                cout << "원하는 작업을 선택해주세요" << endl;
-                cout << "1: 입금, 2: 출금, 3: 송금, 4: 나가기" << endl;
-                cin >> work;
-                switch (work) {
-                    case 1:
-                        deposit();
-                        break;
-                    case 2:
-                        withdrawal();
-                        break;
-                    case 3:
-                        transfer();
-                        break;
-                    case 4:
-                        cout << "--ATM 나감--" << endl;
-                        this->isAdmin = true;
-                        this->showHistory();
-                        return 0;
-                    default:
-                        cout << "잘못된 접근입니다. " << endl;
-                        break;
-                }
+    while(1) {
+        if(isAdmin) {
+            adminMenu();
+            return 0;
+        }
+        if(isEnglish) {
+            cout << "Account balance: " << usingAccount->getFund() << endl;
+            cout << "Please select work what you want to do." << endl;
+            cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: exit" << endl;
+            cin >> work;
+            switch (work) {
+                case 1:
+                    deposit();
+                    break;
+                case 2:
+                    withdrawal();
+                    break;
+                case 3:
+                    transfer();
+                    break;
+                case 4:
+                    cout << "--Exit--" << endl;
+                    this->isAdmin = true;
+                    this->showHistory();
+                    return 0;
+                default:
+                    cout << "Wrong Approach" << endl;
+                    break;
             }
-        } 
-    }
+    } else {
+            cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
+            cout << "원하는 작업을 선택해주세요" << endl;
+            cout << "1: 입금, 2: 출금, 3: 송금, 4: 나가기" << endl;
+            cin >> work;
+            switch (work) {
+                case 1:
+                    deposit();
+                    break;
+                case 2:
+                    withdrawal();
+                    break;
+                case 3:
+                    transfer();
+                    break;
+                case 4:
+                    cout << "--ATM 나감--" << endl;
+                    this->isAdmin = true;
+                    this->showHistory();
+                    return 0;
+                default:
+                    cout << "잘못된 접근입니다. " << endl;
+                    break;
+            }
+        }
+    } 
     return 0;
 }
 
