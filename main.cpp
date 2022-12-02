@@ -1074,7 +1074,6 @@ ATM makeATM() {
 
     return ATM(bankname, serial, SingleBank, Unilingual, cashes);
 }
-
 int main() {
 
     //Initialize fee
@@ -1082,21 +1081,25 @@ int main() {
 
     Bank Kakao = Bank("Kakao");
     Bank Daegu = Bank("Daegu");
+    Bank Shinhan = Bank("Shinhan");
 
     //Initial Conditions
     bankmap.insert(pair<string, Bank*>("Kakao", &Kakao));
     bankmap.insert(pair<string, Bank*>("Daegu", &Daegu));
+    bankmap.insert(pair<string, Bank*>("Shinhan", &Shinhan));
 
-    normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "111-111-111111", "cooldavid", 5000);
-    normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000);
-    normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000);
+    Account* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "111-111-111111", "cooldavid", 5000);
+    Account* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "222-222-222222", "cooljane", 5000);
+    Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000);
+    Account* Account4 = bankmap.at("Shinhan")->initAccount("Shinahn", "Daniel", "444-444-444444", "cooldan", 5000);
 
-    //normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
-    //normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
-    //normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
-    Admin* admin_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Kate", "4");    // bankmap.at("Kakao")->admin_account;
+    // normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
+    // normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
+    // normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
+    Admin* kakao_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Admin", "999-999-999999");    // bankmap.at("Kakao")->admin_account;
+    Admin* daegu_account = bankmap.at("Daegu")->initAdminAcc(&Daegu, "Admin", "888-888-888888");    // bankmap.at("Kakao")->admin_account;
 
-    ATM* ATM1 = new ATM("Kakao", "111111", true, true, 50000);
+    ATM* ATM1 = new ATM("Kakao", "111111", false, true, 50000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 50000);
     ATM* ATM3 = new ATM("Daegu", "333333", false, false, 50000);
 
@@ -1106,9 +1109,10 @@ int main() {
     ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
-    //Kakao.openAccount(true);
+    // Kakao.openAccount(true);
 
     //Test Case : Action1
+    ATM1->execute();
     ATM1->execute();
     printAccountBalance(accountArray, numOfAccount);
     printATMCash(atmArray, numOfATM);
@@ -1124,4 +1128,3 @@ int main() {
 
     return 0;
 }
-
