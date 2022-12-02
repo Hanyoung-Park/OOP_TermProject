@@ -98,7 +98,7 @@ normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, 
 
 Account &normalAccount::operator+=(int amount)
 {
-    cout << "operator overloader" << endl;
+    // cout << "operator overloader" << endl;
     availableFund += amount;
     return *this;
 }
@@ -144,7 +144,7 @@ public:
     ~Bank();
     int validPassword(normalAccount userAccount, int num);
     normalAccount* returnAccount(string accountNumber, bool English);
-    normalAccount* openAccount(bool isEnglish=true);
+    normalAccount* openAccount(bool isEnglish);
     string getBankName();
     map<string, normalAccount*> getAccountMap();
     map<string, Admin*> getAdminMap();
@@ -192,8 +192,8 @@ normalAccount* Bank::openAccount(bool isEnglish) {
     string userName;
     string accountNum;
     string password;
-    int fund = 0;
-    // bool admin;
+    int fund;
+    bool admin;
     if (isEnglish){
         cout << "input User Name: " << endl;
         cin >> userName;
@@ -201,8 +201,10 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "input Password: " << endl;
         cin >> password;
-        // cout << "input is admin(true/false):  " << endl;
-        // cin >> admin;
+        cout << "input available fund: " << endl;
+        cin >> fund;
+        cout << "input is admin(true/false):  " << endl;
+        cin >> admin;
     }else{
         cout << "이름을 입력하여 주십시오: " << endl;
         cin >> userName;
@@ -210,8 +212,10 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "비밀번호를 입력하여 주십시오: " << endl;
         cin >> password;
-        // cout << "관리자 입니까?(true/false):  " << endl;
-        // cin >> admin;
+        cout << "계좌 잔고를 입력하여 주십시오: " << endl;
+        cin >> fund;
+        cout << "관리자 입니까?(true/false):  " << endl;
+        cin >> admin;
     }
 
     normalAccount* newAccount;
@@ -532,18 +536,22 @@ void ATM::deposit() {
     if(isCheck==false) {
         amountOfCashes += depositMoney;
     }
-    if(isPrimaryBank==false) {
-        *usingAccount -= fee[0];
+    int Fee;
+    if(isPrimaryBank) {
+        Fee = fee[1];
     } else {
-        *usingAccount -= fee[1];
+        Fee = fee[0];
     }
+    *usingAccount -= Fee;
     TransactionID += 1;
     message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+        cout << "Deposit fee: " << Fee << endl;
     }else{
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+        cout << "입금 수수료: " << Fee << endl;
     }
     ofstream writeFile(filePath.data());
     if (writeFile.is_open() ){
@@ -639,8 +647,10 @@ void ATM::withdrawal() {
     history += message;
     if(isEnglish==true) {
     cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
+    cout << "Withdrawal Fee: " << withdrawalFee << endl;
     } else {
     cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
+    cout << "출금 수수료: " << withdrawalFee << endl;
     }
     ofstream writeFile(filePath.data());
     if (writeFile.is_open()) {
@@ -843,9 +853,11 @@ void ATM::transfer() {
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
         cout << "["<< transferAccount->getNum() << "] "<<"Changed balance is " << transferAccount->getFund() << endl;
+        cout << "Transfer fee: " << transferFee << endl;
     }else{
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
         cout << "["<< transferAccount->getNum() << "] "<< "거래 후 잔액: " << transferAccount->getFund() << endl;
+        cout << "송금 수수료: " << transferFee << endl;
     }
     ofstream writeFile(filePath.data());
     if (writeFile.is_open() ){
@@ -1083,8 +1095,6 @@ int main() {
     const int numOfAccount = 3;
     ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
-
-    Kakao.openAccount(true);
 
     //Test Case : Action1
     ATM1->execute();
