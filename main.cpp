@@ -745,8 +745,24 @@ void ATM::transfer() {
             if(transferBankName == primaryBankName) transferFee = fee[4];
             else transferFee = fee[5];
             cout << "Please insert "<< transferMoney+transferFee << ". (including transfer fee)" << endl;
+            string temp;
+            cout << "Please check the amount you inserted: " << transferMoney+transferFee << endl;
+            cout << "If it is not correct, please enter [C]" << endl;
+            cout << "If it is correct, please enter [O]" << endl;
+            cin >> temp;
+            if(temp=="C" || temp=="c") {
+                cout << "Canceled" << endl;
+                return;
+            }
             
         } else {
+            cout << "Please enter the number of source account." << endl;
+            string temp;
+            cin >> temp;
+            if(temp!=usingAccount->getNum()) {
+                cout << "It is invalid account." << endl;
+                return;
+            }
             cout << "Please enter the amount of money to transfer." << endl;
             cin >> transferMoney;
             // Transfer Case 판별
@@ -830,8 +846,24 @@ void ATM::transfer() {
             if(transferBankName == primaryBankName) transferFee = 2000;
             else transferFee = 3000;
             cout << "총액 "<< transferMoney+transferFee << "을 기기에 넣어주세요. (송금 수수료 포함)" << endl;
-            
+            string temp;
+            cout << "투입한 금액이 맞는지 확인해주세요.: " << transferMoney+transferFee << endl;
+            cout << "금액이 맞지 않다면 [C]를 입력해주세요." << endl;
+            cout << "금액이 맞다면 [O]를 입력해주세요." << endl;
+            cin >> temp;
+            if(temp=="C" || temp=="c") {
+                cout << "취소되었습니다" << endl;
+                return;
+            }
         } else {
+            cout << "출금할 계좌를 입력해주세요." << endl;
+            string temp;
+            cin >> temp;
+            if(temp!=usingAccount->getNum()) {
+                cout << "사용할 수 없는 계좌입니다." << endl;
+                return;
+            }
+
             cout << "송금할 금액을 입력해주세요." << endl;
             cin >> transferMoney;
             // Transfer Case 판별
