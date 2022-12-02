@@ -269,6 +269,7 @@ public:
     int execute();
     int adminMenu();
     string getBankname();
+    string getuser();
 
     int getAmountOfCashes();
 };
@@ -291,6 +292,10 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 
 string ATM::getBankname() {
     return primaryBankName;
+}
+
+string Acount::getuser() {
+    return userName;
 }
 
 
@@ -554,7 +559,7 @@ void ATM::deposit() {
     }
     *usingAccount -= Fee;
     TransactionID += 1;
-    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
+    message = to_string(TransactionID) + " | user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -663,7 +668,7 @@ void ATM::withdrawal() {
 
     amountOfCashes -= withdrawalMoney;   
     TransactionID += 1;
-    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+    message = to_string(TransactionID) + " | user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
     history += message;
     if(isEnglish==true) {
     cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -906,8 +911,8 @@ void ATM::transfer() {
         amountOfCashes += (transferMoney+transferFee);
     }
     TransactionID += 1;
-    if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " + to_string(transferMoney) + "\n"; 
-    else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " +to_string(transferMoney) + "\n"; 
+    if(isCashTf==1) message = to_string(TransactionID) + " | user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " + to_string(transferMoney) + "\n"; 
+    else message = to_string(TransactionID) + " | user: " +usingAccount->getuser() +" "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " +to_string(transferMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
