@@ -844,8 +844,8 @@ void ATM::transfer() {
     }
     *transferAccount += transferMoney;
     TransactionID += 1;
-    if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank() + " " +transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
-    else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getBank() + " " +transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " +transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -1116,3 +1116,5 @@ int main() {
 
     return 0;
 }
+
+
