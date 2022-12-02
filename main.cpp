@@ -234,6 +234,7 @@ Admin* Bank::initAdminAcc(Bank* bank, string name, string acc) {
 }
 //------------------------------------------------------------------------------------------------
 
+
 class ATM {
 protected:
     string serial; // REQ1.1, 6-digit serial number
@@ -268,6 +269,7 @@ public:
     
     int execute();
     int adminMenu();
+    string getBankname();
 
     int getAmountOfCashes();
 };
@@ -280,6 +282,9 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
     amountOfCashes = cashes;
 }
 
+string ATM::getBankname() {
+    return primaryBankName;
+}
 
 
 void ATM::readCardInfo(string accNum) {
@@ -296,7 +301,7 @@ void ATM::readCardInfo(string accNum) {
                 valid = 1;
             }
         }
-        if (!valid) {
+        if (!valid & (it->first ==this->getBankname())) {
             map<string, Admin*> adminTempmap;
             adminTempmap = it->second->getAdminMap();
             map<string, Admin*>::iterator it3;
@@ -313,9 +318,9 @@ void ATM::readCardInfo(string accNum) {
 
     if (valid == 0){
         if(isEnglish)
-            cout << "No account found, returning card" << endl;
+            cout << "No account found, returning card\n" << endl;
         else
-            cout << "존재하지 않는 계좌입니다. 카드를 반환하겠습니다" << endl;
+            cout << "존재하지 않는 계좌입니다. 카드를 반환하겠습니다\n" << endl;
 
         errorCheck = 1;
     }
@@ -382,9 +387,9 @@ int ATM::startSession() {
     readCardInfo(accNum);
     if(isSingleBank==true && isPrimaryBank==false) {
         if(isEnglish==true) {
-            cout << "The Card is invalid" << endl;
+            cout << "The Card is invalid\n" << endl;
         } else {
-            cout << "사용할 수 없는 카드입니다." << endl;
+            cout << "사용할 수 없는 카드입니다.\n" << endl;
         }
         return 1;
     }
@@ -394,26 +399,22 @@ int ATM::startSession() {
         return 0;
     }
 
-    for(int i = 0; i < 3; i++){
+    int i = 0;
+    while(i < 3){
         normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum(), isEnglish);
         if (acc == nullptr){
-            if (i == 2) break;
             if (isEnglish) 
                 cout << "Wrong password, Please enter your password again" << endl;
             else
                 cout << "잘못된 비밀번호입니다. 비밀번호를 다시 입력해주세요." << endl;
-            // i++;
+            i++;
+
         }else{
              return 0;
         }
      }
-     if (isEnglish)
-        cout << "You have entered the wrong password for three times. Returning card" << endl;
-     else
-        cout << "3회 비밀번호 잘못 입력하셨습니다. 카드를 반환합니다" << endl;
      return 1;
 }
-
 void ATM::selectLanguage() {
     if(isUnilingual==true) {
         cout << "It is set to English." << endl;
