@@ -933,7 +933,6 @@ int ATM::adminMenu() {
                 case 1:
                     showInfo("serial");
                     showInfo("cash");
-                    cout << "Serial Number: " << serial << endl;
                     
                     if(isUnilingual) isUnilingualYN = "Y";
                     else isUnilingualYN = "N";
