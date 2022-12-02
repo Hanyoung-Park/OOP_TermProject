@@ -51,7 +51,6 @@ public:
     Bank* getBank();
     string getNum();
     string getPassword();
-    string getuser();
 };
 
 Account::Account(){}
@@ -70,9 +69,7 @@ string Account::getNum()
 {
     return accountNumber;
 }
-string Account::getuser(){
-    return userName;
-}
+
 string Account::getPassword()
 {
     return password;
@@ -277,6 +274,14 @@ public:
 };
 
 ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes) {
+    
+    // Reset history file
+    ofstream writeFile(filePath.data());
+    if (writeFile.is_open() ){
+        writeFile << "";
+        writeFile.close();
+    }
+    
     primaryBankName = bankname;
     serial = serialnum;
     isSingleBank = SingleBank;
@@ -320,9 +325,9 @@ void ATM::readCardInfo(string accNum) {
 
     if (valid == 0){
         if(isEnglish)
-            cout << "No account found, returning card\n" << endl;
+            cout << "Error: No account found, returning card\n" << endl;
         else
-            cout << "존재하지 않는 계좌입니다. 카드를 반환하겠습니다\n" << endl;
+            cout << "오류: 존재하지 않는 계좌입니다. 카드를 반환하겠습니다\n" << endl;
 
         errorCheck = 1;
     }
@@ -549,7 +554,7 @@ void ATM::deposit() {
     }
     *usingAccount -= Fee;
     TransactionID += 1;
-    message = to_string(TransactionID) + " | "+ + "user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " deposit " + to_string(depositMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -558,13 +563,15 @@ void ATM::deposit() {
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
         cout << "입금 수수료: " << Fee << endl;
     }
-    ofstream writeFile(filePath.data());
-    if (writeFile.is_open() ){
-        writeFile << message;
-        writeFile.close();
-    }
-
-
+    // ofstream writeFile(filePath.data());
+    // if (writeFile.is_open() ){
+    //     writeFile << message;
+    //     writeFile.close();
+    // }
+    ofstream outfile;
+    outfile.open(filePath, ios_base::app);
+    outfile << message;
+    outfile.close();
 }
 
 void ATM::withdrawal() {
@@ -656,7 +663,7 @@ void ATM::withdrawal() {
 
     amountOfCashes -= withdrawalMoney;   
     TransactionID += 1;
-    message = to_string(TransactionID) +" | "+ + "user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
+    message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " withdrawal " + to_string(withdrawalMoney) + "\n"; 
     history += message;
     if(isEnglish==true) {
     cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -665,11 +672,15 @@ void ATM::withdrawal() {
     cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
     cout << "출금 수수료: " << withdrawalFee << endl;
     }
-    ofstream writeFile(filePath.data());
-    if (writeFile.is_open()) {
-        writeFile << message;
-        writeFile.close();
-    }
+    // ofstream writeFile(filePath.data());
+    // if (writeFile.is_open()) {
+    //     writeFile << message;
+    //     writeFile.close();
+    // }
+    ofstream outfile;
+    outfile.open(filePath, ios_base::app);
+    outfile << message;
+    outfile.close();
     withdrawalCnt += 1;
     
     
@@ -895,8 +906,8 @@ void ATM::transfer() {
         amountOfCashes += (transferMoney+transferFee);
     }
     TransactionID += 1;
-    if(isCashTf==1) message = to_string(TransactionID) + " | "+ + "user: " +usingAccount->getuser() +" "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " + to_string(transferMoney) + "\n"; 
-    else message = to_string(TransactionID) + " | "+ + "user: " +usingAccount->getuser() +" "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " +to_string(transferMoney) + "\n"; 
+    if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " + to_string(transferMoney) + "\n"; 
+    else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " +to_string(transferMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
         cout <<"["<< usingAccount->getNum() << "] "<< "Changed balance is " << usingAccount->getFund() << endl;
@@ -907,11 +918,15 @@ void ATM::transfer() {
         cout << "["<< transferAccount->getNum() << "] "<< "거래 후 잔액: " << transferAccount->getFund() << endl;
         cout << "송금 수수료: " << transferFee << endl;
     }
-    ofstream writeFile(filePath.data());
-    if (writeFile.is_open() ){
-        writeFile << message;
-        writeFile.close();
-    }
+    // ofstream writeFile(filePath.data());
+    // if (writeFile.is_open() ){
+    //     writeFile << message;
+    //     writeFile.close();
+    // }
+    ofstream outfile;
+    outfile.open(filePath, ios_base::app);
+    outfile << message;
+    outfile.close();
 }
 
 // void ATM::endSession() {
@@ -1001,7 +1016,7 @@ int ATM::adminMenu() {
 int ATM::execute() {
     int cheack;
     int work;
-    
+
     selectLanguage();
     try {
         if (startSession()) {
@@ -1153,7 +1168,6 @@ int main() {
     // Kakao.openAccount(true);
 
     //Test Case : Action1
-    ATM1->execute();
     ATM1->execute();
     ATM1->execute();
     printAccountBalance(accountArray, numOfAccount);
