@@ -836,10 +836,12 @@ void ATM::transfer() {
         }
         
     }
-    if(isCashTf==0) *usingAccount -= (transferMoney+transferFee);
+    if(isCashTf==1) {
+        *usingAccount -= (transferMoney+transferFee);
+    }
     *transferAccount += transferMoney;
     TransactionID += 1;
-    if(isCashTf==0) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
+    if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getNum()+ to_string(transferMoney) + "\n"; 
     history += message;
     if(isEnglish==true){
