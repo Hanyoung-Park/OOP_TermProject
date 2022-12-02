@@ -303,7 +303,7 @@ void ATM::readCardInfo(string accNum) {
             map<string, Admin*> adminTempmap;
             adminTempmap = it->second->getAdminMap();
             map<string, Admin*>::iterator it3;
-            for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it2++) {
+            for (it3 = adminTempmap.begin(); it3!=adminTempmap.end(); it3++) {
                 if(it3->second->getNum() == accNum) {
                     isAdmin = true;
                     valid = 2;
