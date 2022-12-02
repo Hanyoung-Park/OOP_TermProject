@@ -18,7 +18,7 @@ class Card;
 //-----------------------------------------------------------------------------
 
 class Bank {
-protected:
+private:
     string bankName;
     map<string, Account*> account_info;
 

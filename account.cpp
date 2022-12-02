@@ -73,7 +73,7 @@ Account &Account::operator-=(int amount)
 
 class Card
 {
-protected:
+private:
     Bank *bank;
     string accNum;
     Account *cardAcc;

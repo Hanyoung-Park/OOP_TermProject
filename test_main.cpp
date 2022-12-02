@@ -19,7 +19,7 @@ map<string, Bank*> bankmap;
 
 class Account
 {
-protected:
+private:
     string userName;
     string accountNumber;
     string password;
@@ -85,7 +85,7 @@ Account &Account::operator-=(int amount)
 
 //-----------------------------------------------------------------------------
 class Bank {
-protected:
+private:
     string bankName;
     map<string, Account*> account_info;
 
@@ -162,7 +162,7 @@ Account* Bank::initAccount(string bank, string user, string acc, string pass, in
 //------------------------------------------------------------------------------------------------
 
 class ATM {
-protected:
+private:
     string serial; // REQ1.1, 6-digit serial number
     bool isSingleBank; // REQ1.2, if the atm is single atm -> true
     bool isUnilingual; // REQ1.3

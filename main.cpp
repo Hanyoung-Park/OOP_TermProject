@@ -11,7 +11,6 @@ class Account;
 class User;
 
 int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
-// int fee[7];
 map<string, Bank*> bankmap;
 
 void init_fee() {
@@ -45,7 +44,6 @@ protected:
 
 public:
     Account();
-    // Account(Bank* bank, string userName, string accountNumber, int availableFund, string password, bool isAdmin = false);
     virtual bool admin();
     int getFund();
     Bank* getBank();
@@ -138,7 +136,7 @@ bool Admin::admin() {
 
 //-----------------------------------------------------------------------------
 class Bank {
-protected:
+private:
     string bankName;
     map<string, normalAccount*> account_info;
     map<string, Admin*> admin_info;
@@ -197,7 +195,6 @@ normalAccount* Bank::openAccount(bool isEnglish) {
     string accountNum;
     string password;
     int fund = 0;
-    // bool admin;
     if (isEnglish){
         cout << "input User Name: " << endl;
         cin >> userName;
@@ -205,8 +202,6 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "input Password: " << endl;
         cin >> password;
-        // cout << "input is admin(true/false):  " << endl;
-        // cin >> admin;
     }else{
         cout << "이름을 입력하여 주십시오: " << endl;
         cin >> userName;
@@ -214,8 +209,6 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "비밀번호를 입력하여 주십시오: " << endl;
         cin >> password;
-        // cout << "관리자 입니까?(true/false):  " << endl;
-        // cin >> admin;
     }
 
     normalAccount* newAccount;
@@ -240,7 +233,7 @@ Admin* Bank::initAdminAcc(Bank* bank, string name, string acc) {
 
 
 class ATM {
-protected:
+private:
     string serial; // REQ1.1, 6-digit serial number
     bool isSingleBank; // REQ1.2, if the atm is single atm -> true
     bool isUnilingual; // REQ1.3
@@ -263,7 +256,6 @@ public:
     void readCardInfo(string accNum);
     void showInfo(string val);
     int startSession();
-    // void endSession(); // REQ2.2에 써먹기, 세션 종료 시 모든 카드 데이터 삭제
     void selectLanguage(); //REQ1.3, true일 경우 그냥 0 리턴, false일 경우 영어 선택시 0 리턴, false일 경우 한국어 선택시 1 리턴
 
     void deposit(); //4번
@@ -337,7 +329,6 @@ void ATM::readCardInfo(string accNum) {
         errorCheck = 1;
     }
     else if (valid == 2){
-        // isPrimaryBank = (primaryBankName==usingAccount->getBank()->getBankName());
         return;
     }
 
@@ -568,11 +559,6 @@ void ATM::deposit() {
         cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
         cout << "입금 수수료: " << Fee << endl;
     }
-    // ofstream writeFile(filePath.data());
-    // if (writeFile.is_open() ){
-    //     writeFile << message;
-    //     writeFile.close();
-    // }
     ofstream outfile;
     outfile.open(filePath, ios_base::app);
     outfile << message;
@@ -677,11 +663,6 @@ void ATM::withdrawal() {
     cout <<"["<< usingAccount->getNum() << "] "<< "거래 후 잔액: " << usingAccount->getFund() << endl;
     cout << "출금 수수료: " << withdrawalFee << endl;
     }
-    // ofstream writeFile(filePath.data());
-    // if (writeFile.is_open()) {
-    //     writeFile << message;
-    //     writeFile.close();
-    // }
     ofstream outfile;
     outfile.open(filePath, ios_base::app);
     outfile << message;
@@ -814,7 +795,6 @@ void ATM::transfer() {
 
         while(1) {
             int cnt = 0;
-            // string transferBankName;
             cout << "송금할 계좌의 은행명을 입력해주세요." << endl;
             cin >> transferBankName;
             if(bankmap[transferBankName] != NULL) {
@@ -923,25 +903,11 @@ void ATM::transfer() {
         cout << "["<< transferAccount->getNum() << "] "<< "거래 후 잔액: " << transferAccount->getFund() << endl;
         cout << "송금 수수료: " << transferFee << endl;
     }
-    // ofstream writeFile(filePath.data());
-    // if (writeFile.is_open() ){
-    //     writeFile << message;
-    //     writeFile.close();
-    // }
     ofstream outfile;
     outfile.open(filePath, ios_base::app);
     outfile << message;
     outfile.close();
 }
-
-// void ATM::endSession() {
-//     usingAccount = nullptr;
-//     withdrawalCnt = 0;
-//     if(isEnglish)
-//         cout << "END SESSION" << endl;
-//     else
-//         cout << "세션을 종료합니다" << endl;
-// }
 
 int ATM::adminMenu() {
     int work;
@@ -1137,9 +1103,6 @@ ATM makeATM() {
 }
 int main() {
 
-    //Initialize fee
-    //init_fee();
-
     Bank Kakao = Bank("Kakao");
     Bank Daegu = Bank("Daegu");
     Bank Shinhan = Bank("Shinhan");
@@ -1154,11 +1117,8 @@ int main() {
     Account* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "333-333-333333", "coolkate", 5000);
     Account* Account4 = bankmap.at("Shinhan")->initAccount("Shinahn", "Daniel", "444-444-444444", "cooldan", 5000);
 
-    // normalAccount* Account1 = bankmap.at("Kakao")->initAccount("Kakao", "David", "1", "d", 50000);
-    // normalAccount* Account2 = bankmap.at("Daegu")->initAccount("Daegu", "Jane", "2", "j", 50000);
-    // normalAccount* Account3 = bankmap.at("Kakao")->initAccount("Kakao", "Kate", "3", "k", 50000);
-    Admin* kakao_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Admin", "999-999-999999");    // bankmap.at("Kakao")->admin_account;
-    Admin* daegu_account = bankmap.at("Daegu")->initAdminAcc(&Daegu, "Admin", "888-888-888888");    // bankmap.at("Kakao")->admin_account;
+    Admin* kakao_account = bankmap.at("Kakao")->initAdminAcc(&Kakao, "Admin", "999-999-999999");    
+    Admin* daegu_account = bankmap.at("Daegu")->initAdminAcc(&Daegu, "Admin", "888-888-888888");  
 
     ATM* ATM1 = new ATM("Kakao", "111111", false, true, 50000);
     ATM* ATM2 = new ATM("Daegu", "222222", false, false, 50000);
@@ -1170,6 +1130,7 @@ int main() {
     ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
 
+    // Testcase for opening account
     // Kakao.openAccount(true);
 
     //Test Case : Action1

@@ -11,7 +11,7 @@ class User;
 class Card;
 
 class ATM {
-protected:
+private:
     string serial; // REQ1.1, 6-digit serial number
     bool isSingleBank; // REQ1.2, if the atm is single atm -> true
     bool isUnilingual; // REQ1.3
