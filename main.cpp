@@ -51,6 +51,7 @@ public:
     Bank* getBank();
     string getNum();
     string getPassword();
+    string getuser();
 };
 
 Account::Account(){}
@@ -77,6 +78,10 @@ string Account::getPassword()
 
 bool Account::admin(){
     return isAdmin;
+}
+
+string Account::getuser() {
+    return userName;
 }
 
 class normalAccount : public Account {
@@ -269,7 +274,6 @@ public:
     int execute();
     int adminMenu();
     string getBankname();
-    string getuser();
 
     int getAmountOfCashes();
 };
@@ -292,10 +296,6 @@ ATM::ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, in
 
 string ATM::getBankname() {
     return primaryBankName;
-}
-
-string Acount::getuser() {
-    return userName;
 }
 
 
@@ -1173,6 +1173,7 @@ int main() {
     // Kakao.openAccount(true);
 
     //Test Case : Action1
+    ATM1->execute();
     ATM1->execute();
     ATM1->execute();
     printAccountBalance(accountArray, numOfAccount);

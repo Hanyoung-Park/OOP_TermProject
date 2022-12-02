@@ -1,3 +1,4 @@
-1: 111-111-111111 withdrawal 1000
-2: 111-111-111111 withdrawal 1000
-3: 111-111-111111 deposit 1000
+1 | user: David 111-111-111111 deposit 66000
+2 | user: David 111-111-111111 withdrawal 3000
+3 | user: Jane 222-222-222222 transfer to Kakao 333-333-333333 1000
+4 | user: Jane 111111 transfer to Shinhan 444-444-444444 50000
