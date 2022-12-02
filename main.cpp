@@ -8,7 +8,6 @@ using namespace std;
 class ATM;
 class Bank;
 class Account;
-class User;
 
 int fee[7] = {1000, 0, 1000, 2000, 2000, 3000, 4000};
 map<string, Bank*> bankmap;
