@@ -887,6 +887,9 @@ void ATM::transfer() {
         *usingAccount -= (transferMoney+transferFee);
     }
     *transferAccount += transferMoney;
+    if(isCashTf==2) {
+        amountOfCashes += (transferMoney+transferFee);
+    }
     TransactionID += 1;
     if(isCashTf==1) message = to_string(TransactionID) + ": "+ usingAccount->getNum() + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " + to_string(transferMoney) + "\n"; 
     else message = to_string(TransactionID) + ": "+ serial + " transfer to " + transferAccount->getBank()->getBankName() + " " + transferAccount->getNum()+ " " +to_string(transferMoney) + "\n"; 
