@@ -242,7 +242,6 @@ protected:
     int amountOfCashes; // REQ1.4 참조
     string history; // REQ1.9, History를 어떻게 담을지 고민. (어레이 형태?)
     string primaryBankName;
-    bool isAdmin;
     bool isPrimaryBank;
     int TransactionID;
     //---Account Information
@@ -254,6 +253,8 @@ protected:
 public:
     ATM(string bankname, string serialnum, bool SingleBank, bool Unilingual, int cashes);
     bool isEnglish;
+    bool isAdmin;
+    
     void readCardInfo(string accNum);
     void showInfo(string val);
     int startSession();
@@ -968,7 +969,7 @@ int ATM::execute() {
             if(isEnglish) {
                 cout << "Account balance: " << usingAccount->getFund() << endl;
                 cout << "Please select work what you want to do." << endl;
-                cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: Cancel" << endl;
+                cout << "1: Deposit, 2: Withdrawal, 3: Transfer, 4: exit" << endl;
                 cin >> work;
                 switch (work) {
                     case 1:
@@ -981,7 +982,9 @@ int ATM::execute() {
                         transfer();
                         break;
                     case 4:
-                        cout << "Canceled" << endl;
+                        cout << "--Exit--" << endl;
+                        this->isAdmin = true;
+                        this->showHistory();
                         return 0;
                     default:
                         cout << "Wrong Approach" << endl;
@@ -990,7 +993,7 @@ int ATM::execute() {
         } else {
                 cout << "계좌 잔고: " << usingAccount->getFund() << endl;;
                 cout << "원하는 작업을 선택해주세요" << endl;
-                cout << "1: 입금, 2: 출금, 3: 송금, 4: 취소" << endl;
+                cout << "1: 입금, 2: 출금, 3: 송금, 4: 나가기" << endl;
                 cin >> work;
                 switch (work) {
                     case 1:
@@ -1003,7 +1006,9 @@ int ATM::execute() {
                         transfer();
                         break;
                     case 4:
-                        cout << "취소되었습니다." << endl;
+                        cout << "--ATM 나감--" << endl;
+                        this->isAdmin = true;
+                        this->showHistory();
                         return 0;
                     default:
                         cout << "잘못된 접근입니다. " << endl;
@@ -1014,6 +1019,7 @@ int ATM::execute() {
     }
     return 0;
 }
+
 
 int ATM::getAmountOfCashes() {
     return amountOfCashes;
