@@ -368,6 +368,7 @@ void ATM::showHistory() {
 int ATM::startSession() {
     withdrawalCnt = 0;
     errorCheck = 0;
+    isAdmin = 0;
 
     if(isEnglish) {
         cout << primaryBankName << " ATM" << endl;
