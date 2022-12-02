@@ -144,7 +144,7 @@ public:
     ~Bank();
     int validPassword(normalAccount userAccount, int num);
     normalAccount* returnAccount(string accountNumber, bool English);
-    normalAccount* openAccount(bool isEnglish);
+    normalAccount* openAccount(bool isEnglish=true);
     string getBankName();
     map<string, normalAccount*> getAccountMap();
     map<string, Admin*> getAdminMap();
@@ -192,8 +192,8 @@ normalAccount* Bank::openAccount(bool isEnglish) {
     string userName;
     string accountNum;
     string password;
-    int fund;
-    bool admin;
+    int fund = 0;
+    // bool admin;
     if (isEnglish){
         cout << "input User Name: " << endl;
         cin >> userName;
@@ -201,10 +201,8 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "input Password: " << endl;
         cin >> password;
-        cout << "input available fund: " << endl;
-        cin >> fund;
-        cout << "input is admin(true/false):  " << endl;
-        cin >> admin;
+        // cout << "input is admin(true/false):  " << endl;
+        // cin >> admin;
     }else{
         cout << "이름을 입력하여 주십시오: " << endl;
         cin >> userName;
@@ -212,10 +210,8 @@ normalAccount* Bank::openAccount(bool isEnglish) {
         cin >> accountNum;
         cout << "비밀번호를 입력하여 주십시오: " << endl;
         cin >> password;
-        cout << "계좌 잔고를 입력하여 주십시오: " << endl;
-        cin >> fund;
-        cout << "관리자 입니까?(true/false):  " << endl;
-        cin >> admin;
+        // cout << "관리자 입니까?(true/false):  " << endl;
+        // cin >> admin;
     }
 
     normalAccount* newAccount;
@@ -1087,6 +1083,8 @@ int main() {
     const int numOfAccount = 3;
     ATM* atmArray[numOfATM] = {ATM1, ATM2, ATM3};
     Account* accountArray[numOfAccount] = {Account1, Account2, Account3};
+
+    Kakao.openAccount(true);
 
     //Test Case : Action1
     ATM1->execute();
