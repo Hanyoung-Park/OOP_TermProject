@@ -394,20 +394,23 @@ int ATM::startSession() {
         return 0;
     }
 
-    int i = 0;
-    while(i < 3){
+    for(int i = 0; i < 3; i++){
         normalAccount* acc = usingAccount->getBank()->returnAccount(usingAccount->getNum(), isEnglish);
         if (acc == nullptr){
+            if (i == 2) break;
             if (isEnglish) 
                 cout << "Wrong password, Please enter your password again" << endl;
             else
                 cout << "잘못된 비밀번호입니다. 비밀번호를 다시 입력해주세요." << endl;
-            i++;
-
+            // i++;
         }else{
              return 0;
         }
      }
+     if (isEnglish)
+        cout << "You have entered the wrong password for three times. Returning card" << endl;
+     else
+        cout << "3회 비밀번호 잘못 입력하셨습니다. 카드를 반환합니다" << endl;
      return 1;
 }
 
