@@ -593,6 +593,10 @@ void ATM::withdrawal() {
             cout << "Sorry, This ATM does not have enough money in it. " << endl;
             return;
         }
+        if(usingAccount->getFund()<withdrawalFee+withdrawalMoney) {
+            cout << "Sorry, there are not enough funds in the account. " << endl;
+            return;
+        }
         cout << "If you want to cancel, please type [Y]" << endl;
         cout << "If you don't want to cancel, please type [N]" << endl;
         char temp;
@@ -624,6 +628,10 @@ void ATM::withdrawal() {
         }
         if(amountOfCashes<withdrawalFee+withdrawalMoney) {
             cout << "죄송합니다만 ATM에 충분한 금액이 들어있지 않습니다." << endl;
+            return;
+        }
+        if(usingAccount->getFund()<withdrawalFee+withdrawalMoney) {
+            cout << "죄송합니다만 계좌에 충분한 금액이 들어있지 않습니다." << endl;
             return;
         }
         cout << "취소를 원하신다면 [Y]를 입력해주세요." << endl;
