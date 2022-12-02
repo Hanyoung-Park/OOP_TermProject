@@ -98,7 +98,6 @@ normalAccount::normalAccount(Bank* bank, string userName, string accountNumber, 
 
 Account &normalAccount::operator+=(int amount)
 {
-    cout << "operator overloader" << endl;
     availableFund += amount;
     return *this;
 }
